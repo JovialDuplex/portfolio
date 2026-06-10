@@ -5,21 +5,22 @@ import ServicesPage from './pages/Services';
 import ProjectsPage from './pages/Projects';
 import ContactPage from './pages/Contact';
 import InfosPage from './pages/Infos';
+import NavBar from './components/navbar/navbar';
 
 
 function App() {
 
   return (
-    <div className="app w-full h-screen flex flex-col">
+    <div data-theme="light" className="app w-full h-screen flex flex-col">
       <BrowserRouter>
-        <header className="app-header fixed top-0 w-full h-16 bg-slate-700">
-          app header
+        <header className="app-header fixed top-0 w-full h-16">
+          <NavBar/>
         </header>
         
-        <main className="app-body flex-1 bg-orange-950">
+        <main className="app-body flex-1 mt-16">
           <Routes>
             <Route path={"/"} element={<HomePage/>}/>
-            <Route path={"/services"} element={<ServicesPage/>} />
+            <Route path={"/services"} element={<ServicesPage/>}/>
             <Route path={"/projects"} element={<ProjectsPage/>} />
             <Route path={"/about-me"} element={<InfosPage/>} />
             <Route path={"/contact"} element={<ContactPage/>} />
