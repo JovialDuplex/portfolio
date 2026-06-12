@@ -1,5 +1,4 @@
 import { NavLink } from "react-router-dom";
-import "./navbar.css"
 import { Button } from "@/components/ui/button";
 import {FaMoon, FaSun, FaDownload, FaTimes, FaBars} from "react-icons/fa";
 import { useState } from "react";
