@@ -11,9 +11,9 @@ import NavBar from './components/navbar/navbar';
 function App() {
 
   return (
-    <div data-theme="light" className="app w-full h-screen flex flex-col">
+    <div data-theme="dark" className="app text-(--text-primary) w-full h-screen flex flex-col">
       <BrowserRouter>
-        <header className="app-header fixed top-0 w-full h-16">
+        <header className="app-header fixed bg-(--bg-navbar) top-0 w-full h-16">
           <NavBar/>
         </header>
         

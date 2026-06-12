@@ -40,9 +40,9 @@ export default function HomePage(){
         <div className="home-page w-full h-full">
             <section className="hero-section h-7/12 px-7 py-4 grid grid-cols-2">
                 <div className="first-block flex  flex-col gap-4 px-10">
-                    <span className={"text-[var(--main-color)] text-lg "}> Bonjour, je suis </span>
+                    <span className={"text-(--main-color) text-lg "}> Bonjour, je suis </span>
                     <span className={"text-5xl font-bold uppercase"}> Soh Takeuh </span>
-                    <span className="text-3xl font-bold text-[var(--main-color)] uppercase"> Developpeur Web fullstack</span>
+                    <span className="text-3xl font-bold text-(--main-color) uppercase"> Developpeur Web fullstack</span>
                     <p>
                         Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat earum dolores repudiandae aliquam, cum iure! Distinctio a libero debitis eius reprehenderit! Beatae placeat ut saepe exercitationem, corrupti dolore perspiciatis illum!
                     </p>
