@@ -21,6 +21,10 @@
     --bg-cta-hover: black;
     --text-cta-hover: white;
     --border-icons: black;
+    --border-card: rgba(59, 130, 246, 0.18);
+    --bg-card: #ffffff;
+    --bg-tags: #dbeafe;
+    --text-tags: #1d4ed8;
 
 
     --background :  oklch(1 0 0);
@@ -60,6 +64,8 @@
 
 [data-theme = "dark"] {
     --bg-page : linear-gradient(135deg, #0a0f1e 0%, #0d1b3e 50%, #0a0f1e 100%);
+    --border-card: rgba(59, 130, 246, 0.12);
+    --bg-card: #0f1729;
     --text-primary : #f0f6ff;
     --text-secondary : #94a3b8;
     --bg-navbar: rgba(10,15,30,0.85);
@@ -70,6 +76,8 @@
     --bg-cta-hover: white;
     --text-cta-hover: black;
     --border-icons: white;
+    --bg-tags: #1e2d4a;
+    --text-tags: #93c5fd;
 }
 
 @theme inline {

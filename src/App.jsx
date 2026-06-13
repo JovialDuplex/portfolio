@@ -6,14 +6,15 @@ import ProjectsPage from './pages/Projects';
 import ContactPage from './pages/Contact';
 import InfosPage from './pages/Infos';
 import NavBar from './components/navbar';
-
+import useThemeStore from './store/themStore';
 
 function App() {
-
+  const theme = useThemeStore((state)=>state.theme);
+  console.log(theme);
   return (
-    <div data-theme="dar" className="app text-(--text-primary) w-full h-screen flex flex-col">
+    <div data-theme={theme} className="app text-(--text-primary) w-full h-screen flex flex-col">
       <BrowserRouter>
-        <header className="app-header fixed bg-(--bg-navbar) top-0 w-full h-16">
+        <header className="app-header fixed  bg-(--bg-navbar) w-full h-16">
           <NavBar/>
         </header>
         

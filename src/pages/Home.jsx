@@ -1,64 +1,90 @@
-import Card from "../components/card/card";
 import {
-    FaGithub, 
-    FaLinkedinIn, 
-    FaTwitter, FaFacebookF
+    FaCode, 
+    FaTachometerAlt, 
+    FaServer, 
+    FaPencilRuler,
 }from "react-icons/fa";
 
-import {loremIpsum} from "lorem-ipsum";
-
-import image from "../assets/image1.png";
 import Hero from "@/components/hero";
 
 export default function HomePage(){
     
-    const services = [
-        {
-        service_name: "Web Development",
-        desc_service: loremIpsum(),
-        skill_list: ["html", "css", "javascript", "php"]
-        }, 
-
-        {
-            service_name: "Graphic Designer",
-            desc_service: loremIpsum(),
-            skill_list: ["Photoshop", "illustrator", "adobe xd"]
-            
-        },
-        {
-            service_name: "Design UI/UX",
-            desc_service: loremIpsum(),
-            skill_list: ["figma", "lunacy", "photoshop", "php"]
-        },
-        {
-            service_name: "Design UI/UX",
-            desc_service: loremIpsum(),
-            skill_list: ["figma", "lunacy", "photoshop", "php"]
-        }
-    ];
+const services = [
+  {
+    icon: <FaCode size={28} />,
+    title: "Développement Web",
+    description:
+      "Je conçois et développe des applications web modernes, performantes et évolutives avec des technologies de pointe.",
+    tags: ["React", "Next.js", "Tailwind"],
+  },
+  {
+    icon: <FaTachometerAlt size={28} />,
+    title: "Performance & SEO",
+    description:
+      "Optimisation des performances et du référencement pour que vos applications soient rapides et visibles.",
+    tags: ["SEO", "Lighthouse", "Speed"],
+  },
+  {
+    icon: <FaServer size={28} />,
+    title: "Applications sur mesure",
+    description:
+      "Développement d'applications fullstack adaptées à vos besoins métiers spécifiques.",
+    tags: ["API", "DB", "Fullstack"],
+  },
+  {
+    icon: <FaPencilRuler size={28} />,
+    title: "UI/UX Design",
+    description:
+      "Conception d'interfaces utilisateur intuitives et esthétiques pour une expérience optimale.",
+    tags: ["Figma", "UI/UX", "Prototyping"],
+  },
+];
 
     return (
         <div className="home-page"> 
+            {/* --------section hero----------- */}
             <Hero />
+
+            {/*------- section service ------- */}
+            <section className="my-0 mx-auto pt-12 pb-8 px-20">
+                <div className="mb-12 text-center">
+                    <p className="font-semibold text-(--text-accent) text-[0.85rem] uppercase mb-2">
+                        That I do 
+                    </p>
+                    <h2 className={"font-extrabold text-(--text-primary) "} style={{fontSize: "clamp(1.6rem, 4vw, 2.2rem)"}}>
+                        My services 
+                    </h2>
+                </div>
+
+                <div style={{display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr)", gap: "1.5rem"}}>
+                    {services.map((service, index)=> (
+                        <div key={index} className="bg-(--bg-card) rounded-[16px] p-8 border border-(--border-card) cursor-default hover:-translate-1.25 hover:border-[rgba(59, 130, 246, 0.5)]" style={{transition: "transform 0.25s, border-color 0.25s"}}>
+                            {/* icon */}
+                            <div className="w-14 h-14 rounded-[14px] flex items-center justify-center text-(--text-accent) mb-5 border border-(--text-accent)">
+                                {service.icon}
+                            </div>
+
+                            <h3 className="font-bold text-[1.1rem] mb-3 text-(--text-primary)">
+                                {service.title}
+                            </h3>
+
+                            <p className="text-(--text-secondary) text-[0.95rem] leading-tight mb-5"> 
+                                {service.description}
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                                {service.tags.map((tag, index)=> (
+                                    <span
+                                        key={index}
+                                        className="bg-(--bg-tags) text-(--text-tags) py-1 px-3 rounded-[20px] text-[0.78rem] font-semibold"
+                                    >
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
         </div>
     )
 }
-// <section className="services-section flex flex-col gap-3 h-5/12">
-//     <h1 className="text-xl font-bold text-center underline">Mes services </h1>
-    
-//     {/* <div className="flex-1 grid grid-rows-2 grid-cols-4 gap-5 px-3">
-//         <Card service_name={"Developpement web"} desc_service={`
-//                 Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam, quam earum, iusto eveniet impedit quas ipsa alias, molestias aperiam vero ex dolorem ullam doloremque sed. Deleniti commodi praesentium itaque neque.
-//             `} skill_list={['html', "css", 'javascript']}/>
-//         <Card />
-//         <Card />
-//         <Card />
-//     </div>*/}
-//     <ul className="list-services flex-1 grid grid-cols-4 gap-4 px-4">
-//         {services.map((value, index)=>(
-//             <li key={index}> 
-//                 <Card service_name={value.service_name} desc_service={value.desc_service} skill_list={value.skill_list}/>
-//             </li>
-//         ))}
-//     </ul>
-// </section> 

@@ -2,6 +2,8 @@ import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {FaMoon, FaSun, FaDownload, FaTimes, FaBars} from "react-icons/fa";
 import { useState } from "react";
+import useThemeStore from "@/store/themStore";
+
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -18,13 +20,13 @@ const navData = {
 }
 
 export default function NavBar(){
-    const [theme, setTheme] = useState("dark");
-    const toggleTheme = ()=>{setTheme((prev)=> prev === "light" ? "dark" : "light")}
+    const {theme, toggleTheme} = useThemeStore();
+
     const [menuOpen, setMenuOpen] = useState(false);
 
     return (
         <>
-            <nav className={"h-full z-50  bg-(--bg-navbar)  border-b border-(--border-navbar) py-0 px-6 flex justify-between items-center"}>
+            <nav className={"h-full z-100 bg-(--bg-navbar)  border-b border-(--border-navbar) py-0 px-6 flex justify-between items-center"}>
                 {/* logo de la barre de navigation ------------ */}
                 <div className="navbar-logo flex items-center gap-3">
                     <img className="logo h-10 lg:h-12 w-auto rounded-4xl" src={navData.logo} alt={"logo-app"}/>

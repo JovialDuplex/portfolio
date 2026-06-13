@@ -11,7 +11,7 @@ import {
 const heroData = {
     name : "soh takeuh",
     secondName: "jovial duplex",
-    job: "developpeur fullstack",
+    job: "fullstack developer",
     description : loremIpsum({count: 3}),
     socialNetworks : [
         {Icon: FaLinkedin, href: "#", label: "linkedin"},
@@ -19,21 +19,22 @@ const heroData = {
         {Icon: FaFacebookF, href: "#", label: "Facebook"},
         {Icon: FaGithub, href: "#", label: "GitHub"},
         {Icon: FaEnvelope, href: "#", label: "Email"},
-    ]
+    ],
+    profilePicture : "/image1.png"
 }
 
 export default function Hero(){
     return (
-        <section className="max-w-6xl my-0 mx-auto pt-20 pb-16 px-8 grid grid-cols-2 items-center gap-12 relative">
+        <section className="max-w-6xl my-0 mx-auto pt-20 pb-16 px-8 grid lg:grid-cols-2 sm:grid-cols-1 items-center gap-12">
 
             {/* la goutte brillante */}
             {/* <div className="absolute top-[10%] right-[5%] w-100 h-[400] bg-radial "/> */}
             {/* <div className="absolute bottom-0 left-[5%] w-62.5 h-62.5"></div> */}
         
-            {/* texte de gauche */}
+            {/* block de gauche */}
             <div className="relative z-2">
                 <p className="text-lg text-(--text-secondary) mb-2">
-                    Bonjour, je suis 
+                    Hello, I am 
                 </p>
                 <h1 className="font-bold leading-tight text-(--text-primary) uppercase" style={{fontSize: "clamp(2rem, 5vw, 3.2rem)"}}>
                     {heroData.name}<br />
@@ -55,13 +56,13 @@ export default function Hero(){
                             boxShadow: "0 6px 20px var(--text-accent-glow)",
                             transition: "transform 0.2s, box-shadow 0.2s"
                         }}>
-                            Voir mes Projets
+                            My Projects
                     </Link>
 
                     <Link to={"/contact"} 
                         className={"bg-transparent decoration-none rounded-[8px] text-(--text-primary) text-[0.95rem] border-2 border-(--border-cta) px-6 py-2.75 transition-all duration-200 hover:bg-(--bg-cta-hover) hover:text-(--text-cta-hover) font-semibold "}> 
                         
-                        Me Contacter
+                        Contact Me
                     </Link>
                 </div>
 
@@ -78,6 +79,11 @@ export default function Hero(){
                             </Link>
                         ))}
                 </div>
+            </div>
+
+            {/* block de droite avec la photo */}
+            <div className=" w-120 h-120 border-none overflow-hidden">
+                <img src={heroData.profilePicture} alt={"profile picture"} className="w-full h-auto"/>
             </div>
         </section>
     )
