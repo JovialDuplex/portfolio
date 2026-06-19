@@ -6,6 +6,7 @@ import {
 }from "react-icons/fa";
 
 import Hero from "@/components/hero";
+import { loremIpsum } from "lorem-ipsum";
 
 export default function HomePage(){
     

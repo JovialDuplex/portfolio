@@ -32,7 +32,7 @@ export default function Hero(){
             {/* <div className="absolute bottom-0 left-[5%] w-62.5 h-62.5"></div> */}
         
             {/* block de gauche */}
-            <div className="relative z-2">
+            <div className="relative">
                 <p className="text-lg text-(--text-secondary) mb-2">
                     Hello, I am 
                 </p>

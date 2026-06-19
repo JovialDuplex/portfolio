@@ -40,7 +40,7 @@ export default function NavBar(){
                 <ul className="hidden m-0 p-0 gap-6 list-none lg:flex ">
                     {navLinks.map((value, index) => (
                         <li key={index}>
-                            <NavLink className={({isActive}) => `bg-none transition-colors duration-200 cursor-pointer pb-0.5 ${isActive ? 'font-bold text-(--text-accent) border-b-2 border-(--text-accent)' : 'font-semibold border-b-2 border-transparent'}`} to={value.href}> {value.label} </NavLink>
+                            <NavLink className={({isActive}) => `bg-none transition-colors duration-200 cursor-pointer pb-0.5 ${isActive ? 'font-bold text-(--text-accent) border-b-2 border-(--text-accent)' : 'font-semibold border-b-2 border-transparent text-(--text-primary)'}`} to={value.href}> {value.label} </NavLink>
                         </li>
                     ))}
                 </ul>
