@@ -16,11 +16,11 @@ import LoginPage from './pages/admin-page/login';
 const AdminLayout = function(){
   return (
     <div className='h-screen grid grid-cols-12'>
-      <aside className='col-span-2 bg-(--bg-navbar) border-r-2 border-(--border-navbar) '>
+      <aside className='col-span-2 [background:var(--bg-page)] text-(--text-primary) border-r-2 border-(--border-navbar) '>
         <NavBarAdmin/>
       </aside>
 
-      <main className="col-span-10 [background:var(--bg-page)]">
+      <main className="col-span-10 *:w-full *:h-full [background:var(--bg-page)]">
         <Outlet />
       </main>
     </div>
@@ -54,9 +54,11 @@ export default function App(){
           {subdomain === "admin" ? (
               <>
                 <Route path={"/"} element={<LoginPage/>} />
-
                 <Route path={"/dashboard"} element={<AdminLayout/>}>
-                  <Route index element={<Dashboard/>}/>
+                  <Route index path={"home"} element={<Dashboard/>}/>
+                  <Route path={"services"} element={<h1 className='bg-green-500'>yo</h1>} />
+                  <Route path={"projects"} element={<>yo</>} />
+                  <Route path={"settings"} element={<>yo</>} />
                 </Route>
               </>
             ): (

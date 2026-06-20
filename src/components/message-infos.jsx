@@ -22,7 +22,7 @@ export default function MessageInfos({messages}){
                 </Badge>
             </CardHeader>
 
-            <CardContent className={"px-3 pb-4"}>
+            <CardContent className={"px-3 pb-2"}>
                 {messages.map((message, index) => (
                     <div key={index} className="flex items-center gap-3 p-2.5">
                         <Avatar className={"size-8"}>

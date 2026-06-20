@@ -1,22 +1,18 @@
 import { Button } from "@/components/ui/button";
-import useThemeStore from "@/store/themStore"
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { 
-    Field, FieldLabel, 
-
-} from "@/components/ui/field";
+import { Field, FieldLabel} from "@/components/ui/field";
 import {Input, } from "@/components/ui/input";
 import {InputGroup, InputGroupButton, InputGroupInput} from "@/components/ui/input-group";
 import {Eye, EyeClosed} from "lucide-react"
-
+import useUser from "@/hooks/user";
 
 export default function LoginPage (){
-    const navigate = useNavigate();
     const [show, setShow] = useState(false);
+    const [userData, setUserData] = useState({email: "", password: ""});
 
-    const goToHome = ()=>{navigate("/dashboard")}
+    const changeUserData = function(event){setUserData(prev => ({...prev, [event.target.name]: event.target.value}))};
     const toggleShowPassword = ()=>{setShow(prev => !prev)};
+    const {login} = useUser();
     
     return (
         <div 
@@ -32,18 +28,18 @@ export default function LoginPage (){
 
                 <form className="mt-5 flex flex-col gap-5">
                     <Field>
-                        <FieldLabel className={"text-(--text-secondary)"} htmlFor={"username"}> Username </FieldLabel>
-                        <Input type={"text"} id={"username"} name={"username"} className={"border-(--text-accent) text-(--text-secondary) "}/>
+                        <FieldLabel className={"text-(--text-secondary)"} htmlFor={"email"}> email </FieldLabel>
+                        <Input value={userData.email} onChange={changeUserData} type={"email"} id={"email"} name={"email"} className={"border-(--text-accent) text-(--text-secondary) "}/>
                     </Field>
                     <Field>
                         <FieldLabel htmlFor={"password"} className={"text-(--text-secondary)"}>Password </FieldLabel>
                         <InputGroup className={"border-(--text-accent)"}>
-                            <InputGroupInput type={show ? "text" : "password"}/>
+                            <InputGroupInput value={userData.password} onChange={changeUserData} name={"password"} id={"password"} type={show ? "text" : "password"}/>
                             <InputGroupButton onClick={toggleShowPassword} className={"cursor-pointer"}>{show ? <Eye />: <EyeClosed />} </InputGroupButton>
                         </InputGroup>
                     </Field>
                     <Field>
-                        <Button className={"bg-(--text-accent) cursor-pointer hover:bg-(--text-accent-glow)"}> Login </Button>
+                        <Button className={"bg-(--text-accent) cursor-pointer hover:bg-(--text-accent-glow)"} onClick={(event)=>{login(event, userData)}}> Login </Button>
                     </Field>
                 </form>
                 <p className="text-(--text-secondary) mt-5 text-center"> You forgot your password ? </p>

@@ -26,6 +26,7 @@ export default function Dashboard(){
         { name: "David Nkomo",   subject: "Bug sur le dashboard", date: "13/05/2024", initials: "DN" },
         { name: "Eva Fotso",     subject: "Intégration paiement mobile", date: "13/05/2024", initials: "EF" },
         { name: "Franck Tala",   subject: "Mise à jour WordPress", date: "13/05/2024", initials: "FT" },
+    
     ];
 
     const activities = [
@@ -49,20 +50,24 @@ export default function Dashboard(){
     
     
     return (
-        <div className="dashboard-admin px-5 py-8 flex gap-4 flex-col">
+        <div className="dashboard-admin px-5 flex gap-4 flex-col">
             {/* -----------Header----------- */}
-            <div className="header">
-                
-                <h1 className="text-2xl uppercase md:text-3xl font-extrabold tracking-tight text-(--text-primary)">
-                    Bienvenue,{" "}
-                    <span className="bg-linear-135 from-(--text-accent-light)  to-[#1d4ed8] bg-clip-text text-transparent"> 
-                        soh Takeuh Jovial Duplex
-                    </span>
-                </h1>
-                <p className="text-lg text-(--text-secondary) mt-1 font-medium tracking-wide">
-                Fullstack Web Developer
-                </p>
-            </div>
+            <header className="dashboard-header flex justify-between items-center border-b border-(--border-navbar) py-2">
+                <div>
+                    <h1 className="text-2xl uppercase md:text-3xl font-extrabold tracking-tight text-(--text-primary)">
+                        Bienvenue,{" "}
+                        <span className="bg-linear-135 from-(--text-accent-light)  to-[#1d4ed8] bg-clip-text text-transparent"> 
+                            soh Takeuh Jovial Duplex
+                        </span>
+                    </h1>
+                    <p className="text-lg text-(--text-secondary) mt-1 font-medium tracking-wide">
+                    Fullstack Web Developer
+                    </p>
+                </div>
+                <div className="h-full overflow-hidden rounded-full border-2 border-(--text-primary)">
+                    <img src={"/image1.png"} alt={"profile-picture"} className="h-20 w-20"/>
+                </div>
+            </header>
             {/* -----------section stat----------- */}
             <section className="stat-section">
                 <StatCard statsList={stats} /> 
