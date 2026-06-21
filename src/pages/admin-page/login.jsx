@@ -8,7 +8,7 @@ import useUser from "@/hooks/user";
 
 export default function LoginPage (){
     const [show, setShow] = useState(false);
-    const [userData, setUserData] = useState({email: "", password: ""});
+    const [userData, setUserData] = useState({user_account_name: "", user_account_password: ""});
 
     const changeUserData = function(event){setUserData(prev => ({...prev, [event.target.name]: event.target.value}))};
     const toggleShowPassword = ()=>{setShow(prev => !prev)};
@@ -28,13 +28,13 @@ export default function LoginPage (){
 
                 <form className="mt-5 flex flex-col gap-5">
                     <Field>
-                        <FieldLabel className={"text-(--text-secondary)"} htmlFor={"email"}> email </FieldLabel>
-                        <Input value={userData.email} onChange={changeUserData} type={"email"} id={"email"} name={"email"} className={"border-(--text-accent) text-(--text-secondary) "}/>
+                        <FieldLabel className={"text-(--text-secondary)"} htmlFor={"name"}> name </FieldLabel>
+                        <Input value={userData.user_account_name} onChange={changeUserData} type={"text"} id={"name"} name={"user_account_name"} className={"border-(--text-accent) text-(--text-secondary) "}/>
                     </Field>
                     <Field>
                         <FieldLabel htmlFor={"password"} className={"text-(--text-secondary)"}>Password </FieldLabel>
                         <InputGroup className={"border-(--text-accent)"}>
-                            <InputGroupInput value={userData.password} onChange={changeUserData} name={"password"} id={"password"} type={show ? "text" : "password"}/>
+                            <InputGroupInput value={userData.user_account_password} onChange={changeUserData} name={"user_account_password"} id={"password"} type={show ? "text" : "password"}/>
                             <InputGroupButton onClick={toggleShowPassword} className={"cursor-pointer"}>{show ? <Eye />: <EyeClosed />} </InputGroupButton>
                         </InputGroup>
                     </Field>

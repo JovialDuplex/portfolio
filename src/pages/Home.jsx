@@ -7,6 +7,7 @@ import {
 
 import Hero from "@/components/hero";
 import { loremIpsum } from "lorem-ipsum";
+import useUserStore from "@/store/userStore";
 
 export default function HomePage(){
     
@@ -41,10 +42,17 @@ const services = [
   },
 ];
 
+    const {user} = useUserStore();
+    console.log(user);
+    
     return (
         <div className="home-page"> 
             {/* --------section hero----------- */}
-            <Hero />
+            {/* <Hero 
+                name={user.user_name} 
+                secondName={user.user_second_name} 
+                profilePicture={user.user_picture} 
+                description={user.user_desc}/> */}
 
             {/*------- section service ------- */}
             <section className="my-0 mx-auto pt-12 pb-8 px-20">

@@ -23,7 +23,7 @@ const heroData = {
     profilePicture : "/image1.png"
 }
 
-export default function Hero(){
+export default function Hero({name, secondName, job, description, profilePicture}){
     return (
         <section className="max-w-6xl my-0 mx-auto pt-20 pb-16 px-8 grid lg:grid-cols-2 sm:grid-cols-1 items-center gap-12">
 
@@ -37,14 +37,15 @@ export default function Hero(){
                     Hello, I am 
                 </p>
                 <h1 className="font-bold leading-tight text-(--text-primary) uppercase" style={{fontSize: "clamp(2rem, 5vw, 3.2rem)"}}>
-                    {heroData.name}<br />
+                    {name}<br />
+
                     <span className="bg-linear-135 from-(--text-accent-light)  to-[#1d4ed8]" style={{WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent"}}> 
-                        {heroData.secondName} 
+                        {secondName} 
                     </span> <br/>
-                    <span className="font-semibold text-(--text-primary)" style={{fontSize : "clamp(1.4rem, 3vw, 2rem)"}}> {heroData.job} </span>  
+                    <span className="font-semibold text-(--text-primary)" style={{fontSize : "clamp(1.4rem, 3vw, 2rem)"}}> {job} </span>  
                 </h1>
 
-                <p className="mb-8 text-[0.97rem] leading-[1.7] max-w-105 text-(--text-secondary)"> {heroData.description} </p>
+                <p className="mb-8 text-[0.97rem] leading-[1.7] max-w-105 text-(--text-secondary)"> {description} </p>
             
                 {/* bouton cta  */}
                 <div className="flex gap-4 mb-8 flex-wrap">
@@ -83,7 +84,7 @@ export default function Hero(){
 
             {/* block de droite avec la photo */}
             <div className=" w-120 h-120 border-none overflow-hidden">
-                <img src={heroData.profilePicture} alt={"profile picture"} className="w-full h-auto"/>
+                <img src={profilePicture} alt={"profile picture"} className="w-full h-auto"/>
             </div>
         </section>
     )

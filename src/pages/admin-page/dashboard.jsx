@@ -2,6 +2,7 @@
 import ActivitiesInfos from "@/components/activities-infos";
 import MessageInfos from "@/components/message-infos";
 import StatCard from "@/components/statCard";
+import useUserStore from "@/store/userStore";
 import {
     LayoutDashboard, User, Briefcase,
     FolderOpen, Settings, Layers, 
@@ -11,7 +12,7 @@ import {
 
 
 
-export default function Dashboard(){
+export default function AdminDashboardPage(){
     const stats = [
         { label: "Services",     value: 4,  max: 10, icon: Briefcase },
         { label: "Projetcs",      value: 8,  max: 10, icon: FolderOpen },
@@ -47,25 +48,25 @@ export default function Dashboard(){
         { icon: Settings,        label: "Réglages",         id: "settings"  },
     ];
 
-    
+    const {user} = useUserStore();    
     
     return (
-        <div className="dashboard-admin px-5 flex gap-4 flex-col">
+        <div className="dashboard-admin flex gap-4 flex-col">
             {/* -----------Header----------- */}
             <header className="dashboard-header flex justify-between items-center border-b border-(--border-navbar) py-2">
                 <div>
                     <h1 className="text-2xl uppercase md:text-3xl font-extrabold tracking-tight text-(--text-primary)">
                         Bienvenue,{" "}
                         <span className="bg-linear-135 from-(--text-accent-light)  to-[#1d4ed8] bg-clip-text text-transparent"> 
-                            soh Takeuh Jovial Duplex
+                            {user.user_name} {user.user_second_name}
                         </span>
                     </h1>
                     <p className="text-lg text-(--text-secondary) mt-1 font-medium tracking-wide">
-                    Fullstack Web Developer
+                    {user.user_job_name}
                     </p>
                 </div>
                 <div className="h-full overflow-hidden rounded-full border-2 border-(--text-primary)">
-                    <img src={"/image1.png"} alt={"profile-picture"} className="h-20 w-20"/>
+                    <img src={`${import.meta.env.VITE_URL_ADMIN_BACKEND}${user.user_picture}`} alt={"profile-picture"} className="h-20 w-20"/>
                 </div>
             </header>
             {/* -----------section stat----------- */}

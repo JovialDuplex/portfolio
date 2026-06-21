@@ -1,37 +1,33 @@
 import { useNavigate } from "react-router-dom";
-import { auth, db } from "../firebase";
-import { signInWithEmailAndPassword} from "firebase/auth";
-import { addDoc, collection } from "firebase/firestore";
 import { loremIpsum } from "lorem-ipsum";
-
+import axios from "axios";
+import useUserStore from "@/store/userStore";
 
 const useUser =  function(){
     const navigate = useNavigate();
+    const {user, loginUser, logoutUser} = useUserStore();
+
     const login = async(event, userData)=>{
         event.preventDefault();
         try{
-            const userCredentials = await signInWithEmailAndPassword(auth, userData.email, userData.password);
-            console.log(userCredentials.user);
-            
-            const docRef = await addDoc(collection(db, "users"), {
-                name: "Soh Takeuh",
-                secondName: "jovial duplex",
-                job: "fullstack web developer",
-                description: loremIpsum({count: 3}),
-                socialNetworks : [
-                    {Icon: "FaLinkedin", href: "#", label: "linkedin"},
-                    {Icon: "FaTwitter", href: "#", label: "Twitter"},
-                    {Icon: "FaFacebookF", href: "#", label: "Facebook"},
-                    {Icon: "FaGithub", href: "#", label: "GitHub"},
-                    {Icon: "FaEnvelope", href: "#", label: "Email"},
-                ],
-            });
+            const response = await axios.post(`${import.meta.env.VITE_URL_ADMIN_BACKEND}/login`, userData);
+            const data = await response.data;
+            if(!data.user && !data.token) {
+                return data.message;
+                console.log("erreur lors de la connexion ");
+            }
+            loginUser(data.user, data.token);
 
-            navigate("/dashboard");
+            console.log("connexion de l'admin reussit avec success ")
+            navigate("/dashboard/home");
 
         } catch(error) {
             console.log(error.message);
         }
+    };
+
+    const logout = async function() {
+        navigate("/");
     }
 
     return {

@@ -7,20 +7,23 @@ import ContactPage from './pages/Contact';
 import InfosPage from './pages/Infos';
 import NavBar from './components/navbar';
 import useThemeStore from './store/themStore';
-import Dashboard from './pages/admin-page/dashboard';
+import AdminDashboardPage from './pages/admin-page/dashboard';
 import NavBarAdmin from './components/navbar-admin';
 import LoginPage from './pages/admin-page/login';
+import AdminServicesPage from './pages/admin-page/services';
+import AdminProjectsPage from './pages/admin-page/projects';
+import AdminSettingsPage from './pages/admin-page/settings';
 
 
 
 const AdminLayout = function(){
   return (
-    <div className='h-screen grid grid-cols-12'>
-      <aside className='col-span-2 [background:var(--bg-page)] text-(--text-primary) border-r-2 border-(--border-navbar) '>
+    <div className='h-screen flex flex-col lg:grid lg:grid-cols-12'>
+      <aside className='lg:col-span-2 [background:var(--bg-page)] text-(--text-primary) lg:border-r-2 border-(--border-navbar) '>
         <NavBarAdmin/>
       </aside>
 
-      <main className="col-span-10 *:w-full *:h-full [background:var(--bg-page)]">
+      <main className="lg:col-span-10 flex-1 *:w-full *:h-full *:px-4 [background:var(--bg-page)]">
         <Outlet />
       </main>
     </div>
@@ -33,7 +36,7 @@ const ClientLayout = function(){
       <header className="app-header fixed bg-(--bg-navbar) w-full h-16">
         <NavBar />
       </header>
-      <main className="*:w-full *:h-full app-body mt-16 flex-1 [background:var(--bg-page)]">
+      <main className="*:w-full *:h-full  app-body mt-16 flex-1 [background:var(--bg-page)]">
         <Outlet />
       </main>
     </div>
@@ -55,10 +58,10 @@ export default function App(){
               <>
                 <Route path={"/"} element={<LoginPage/>} />
                 <Route path={"/dashboard"} element={<AdminLayout/>}>
-                  <Route index path={"home"} element={<Dashboard/>}/>
-                  <Route path={"services"} element={<h1 className='bg-green-500'>yo</h1>} />
-                  <Route path={"projects"} element={<>yo</>} />
-                  <Route path={"settings"} element={<>yo</>} />
+                  <Route index path={"home"} element={<AdminDashboardPage/>}/>
+                  <Route path={"services"} element={<AdminServicesPage/>} />
+                  <Route path={"projects"} element={<AdminProjectsPage/>} />
+                  <Route path={"settings"} element={<AdminSettingsPage/>} />
                 </Route>
               </>
             ): (
