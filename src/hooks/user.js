@@ -1,37 +1,40 @@
 import { useNavigate } from "react-router-dom";
-import { loremIpsum } from "lorem-ipsum";
 import axios from "axios";
 import useUserStore from "@/store/userStore";
 
 const useUser =  function(){
     const navigate = useNavigate();
-    const {user, loginUser, logoutUser} = useUserStore();
+    const {loginUser, logoutUser} = useUserStore();
 
-    const login = async(event, userData)=>{
-        event.preventDefault();
+    const login = async(data)=>{
         try{
-            const response = await axios.post(`${import.meta.env.VITE_URL_ADMIN_BACKEND}/login`, userData);
-            const data = await response.data;
-            if(!data.user && !data.token) {
-                return data.message;
+            const response = await axios.post(`${import.meta.env.VITE_URL_ADMIN_BACKEND}/admin/myself/login`, data);
+            const mydata = await response.data;
+            if(!mydata.user && !mydata.token) {
+                return mydata.message;
                 console.log("erreur lors de la connexion ");
             }
-            loginUser(data.user, data.token);
+            loginUser(mydata.user, mydata.token);
 
-            console.log("connexion de l'admin reussit avec success ")
-            navigate("/dashboard/home");
+            console.log("connexion de l'admin reussit avec success ");
+            console.log(mydata);
+            navigate("/admin/dashboard/home");
 
         } catch(error) {
             console.log(error.message);
+            throw error;
+
         }
     };
 
     const logout = async function() {
-        navigate("/");
+        navigate("/admin/login");
+        logoutUser();
     }
 
     return {
         login, 
+        logout,
     }
 };
 

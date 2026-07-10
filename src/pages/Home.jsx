@@ -44,15 +44,15 @@ const services = [
 
     const {user} = useUserStore();
     console.log(user);
-    
+
     return (
         <div className="home-page"> 
             {/* --------section hero----------- */}
-            {/* <Hero 
+            <Hero 
                 name={user.user_name} 
                 secondName={user.user_second_name} 
-                profilePicture={user.user_picture} 
-                description={user.user_desc}/> */}
+                profilePicture={import.meta.env.VITE_URL_BACKEND + user.user_picture} 
+                description={user.user_desc}/>
 
             {/*------- section service ------- */}
             <section className="my-0 mx-auto pt-12 pb-8 px-20">

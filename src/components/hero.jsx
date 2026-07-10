@@ -34,7 +34,7 @@ export default function Hero({name, secondName, job, description, profilePicture
             {/* block de gauche */}
             <div className="relative">
                 <p className="text-lg text-(--text-secondary) mb-2">
-                    Hello, I am 
+                    My Name is
                 </p>
                 <h1 className="font-bold leading-tight text-(--text-primary) uppercase" style={{fontSize: "clamp(2rem, 5vw, 3.2rem)"}}>
                     {name}<br />
