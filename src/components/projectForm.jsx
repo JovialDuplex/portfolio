@@ -1,28 +1,38 @@
-import {useRef, useState, useEffect} from "react";
+import {useState, useEffect} from "react";
 import {Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import {Field, FieldDescription, FieldError, FieldLabel} from "@/components/ui/field";
 import {Input} from "@/components/ui/input";
-import {Plus, X} from "lucide-react";
+import {X} from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import {FaCheckCircle, FaFileUpload, FaCircle } from "react-icons/fa";;
+import {FaCheckCircle, FaFileUpload, FaCircle } from "react-icons/fa";
 import * as yup from "yup";
 import {useForm} from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useProject from "@/hooks/projects";
 import {Spinner} from "@/components/ui/spinner";
-import { toast } from "sonner";
 import useProjectStore from "@/store/useProjectStore";
 
-export default function ProjectForm({isUpdate}){
+export default function ProjectForm({mode, open, project, setOpen}){
 
     const projectSchema = yup.object().shape({
         project_title: yup.string().max(32, ({max})=>`The max length of your project title should be not more than ${max} characters`).required("The Title of a project is required "),
         project_desc: yup.string().max(256, ({max})=> `The max length of your project description should be not more than ${max} characters`).required("The Description of your project is required !"),
         project_content: yup.string().required("The explaining of your project is required !"),
-        project_cover_image: !isUpdate ? yup.mixed().required("The cover image is required !").test("fileSize", "The size of your image should be less than 5M0", (value)=>{
-            return value && value.size <= 5*1024*1024;
-        }).test("type", "Only the image is required !", (value)=>{return value && value.type.startsWith("image/") }) : yup.mixed().nullable(),
+        project_cover_image: mode !== "update" ? yup.mixed()
+                                                    .required("The cover image is required !")
+                                                    .test("fileSize", "The size of your image should be less than 5M0", (value)=>{
+                                                        const file =  value instanceof FileList ? value[0] : value;
+                                                        return !!file && value.size <= 5*1024*1024;
+                                                    })
+                                                    .test("type", "Only the image is required !", (value)=>{
+                                                        const file= value instanceof FileList ? value[0] : value;
+                                                        return !!file && !!file.type && file.type.startsWith("image/") 
+                                                    })
+                                                     
+                                                
+                                                : yup.mixed().nullable(),
+
         project_github_url: yup.string().required("The github url of your project is required !").url("This URL is not valid"),
         project_url: yup.string().notRequired().url("This URL is not valid"),
         project_status: yup.string().oneOf(["pending", "completed"], "The status of your project should be completed or pending").required("The status of your project is required !"),
@@ -33,15 +43,15 @@ export default function ProjectForm({isUpdate}){
             setValue,
             resetField,
             handleSubmit, 
-            formState: {errors}
-        } = useForm({resolver: yupResolver(projectSchema)});
-
+            watch,
+            formState: {errors, isValid, isLoading, dirtyFields},
+        } = useForm({ resolver: yupResolver(projectSchema)});
 
     const handleButtonClick = function(){document.getElementById("project_cover_image").click(); 
         // toast("The file select has been open ", {action: {label: "Cancel", onClick:()=>console.log("cancel")}, description:"creation"})
     };
-    const [previewImageUrl, setPreviewImageUrl] = useState(null);
 
+    const [previewImageUrl, setPreviewImageUrl] = useState(null);
     const handleFileChange = function(event){
         const file = event.target.files[0];
         setValue("project_cover_image", file, {shouldValidate: true, shouldDirty: true});
@@ -66,56 +76,90 @@ export default function ProjectForm({isUpdate}){
         }
     }, [previewImageUrl]);
 
-    const [selectValue, setSelectValue] = useState("pending");
-    const changeSelectValue = (event) => setSelectValue(event.target.value);
+    useEffect(()=>{
+        if(mode==="update" && project) {
+            setPreviewImageUrl(`${import.meta.env.VITE_URL_BACKEND}/${project.project_cover_image}`);
+            reset({
+                project_title: project.project_title,
+                project_desc: project.project_desc,
+                project_content: project.project_content,
+                project_github_url: project.project_github_url,
+                project_url: project.project_url,
+                project_status: project.project_status,
+            });
 
-    const [openDialog, setOpenDialog] = useState(false);
+        } else {
+            setPreviewImageUrl(null);
+            reset({
+                project_title: "",
+                project_desc: "",
+                project_content: "",
+                project_github_url: "",
+                project_url: "",
+                project_status: "pending",
+            })
+        }
+    }, [mode, project?._id]);
+
     const {createProject, updateProject} = useProject();
+
+    const updateMyProject = async function(data) {
+        try {
+            // recuperation des champs qui ont ete modifie en dehors du champ project_cover_image
+            const changedFields = Object.keys(dirtyFields).filter(key=> key !== "project_cover_image");
+
+            if(changedFields.length === 0 && !dirtyFields.project_cover_image) {
+                // aucun n'a ete modifier, on ferme le formulaire 
+                setOpen(false);
+                return;
+            }
+            
+            const formData = new FormData();
+            changedFields.forEach(key=> formData.append(key, data[key]));
+            // ajouter une image si l'utilisateur en a selectionner une nouvelle 
+            if (dirtyFields.project_cover_image && data.project_cover_image instanceof File) {
+                formData.append("project_cover_image", data.project_cover_image);
+            }
+
+            await updateProject(project._id, formData);
+            addActionProject();
+
+        } catch(error) {
+            console.log(error);
+            throw error;
+        } finally {
+            setOpen(false);
+        } 
+    }
     
-    
-    // const updateMyProject = async function(data) {
-    //     try {
-    //         await updateProject(data);
-    //         console.log("The Project has been created ");
-    //         reset();
-    //     } catch(error) {
-    //         console.log(error);
-    //     } 
-    // }
-    
-    const [isLoading, setIsLoading] = useState(false);
     const {addActionProject} = useProjectStore();
     const createMyProject = async function(data) {
         try {
             addActionProject();
             await createProject(data);
-            setIsLoading(true);
         } catch(error) {
             throw error;
         } finally {
-            setIsLoading(false);
-            setOpenDialog(false);
+            setOpen(false);
         }
     };
 
+    const selectValue = watch("project_status");
 
-    return (
-                    
-        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-            
-            <Button onClick={()=>{setOpenDialog(true)}} className={"cursor-pointer hover:bg-blue-600 bg-(--text-accent)"}> <Plus /> Add New Project</Button>
+    return (                    
+        <Dialog open={open} onOpenChange={setOpen}>
             
             <DialogContent className={"flex flex-col [background:var(--bg-page)] text-(--text-primary) h-11/12 overflow-y-auto w-8/12! max-w-200!"}>
                 <DialogHeader className={"shrink-0"}>
-                    <DialogTitle className={"text-xl"}> Add a Project </DialogTitle>
-                    <DialogDescription> Fill this following form for add a project in the list </DialogDescription>
+                    <DialogTitle className={"text-xl"}> {mode === "update" ? "Update a Project" : "Add a Project"} </DialogTitle>
+                    <DialogDescription> Fill this following form for {mode === "update" ? "update" : "add" } a project in the list </DialogDescription>
                 </DialogHeader>
 
-                <form className="flex-1 flex flex-col gap-5" onSubmit={handleSubmit(createMyProject)}>
+                <form className="flex-1 flex flex-col gap-5" onSubmit={handleSubmit(mode === "update" ? updateMyProject : createMyProject)}>
                     <Field>
                         <FieldLabel htmlFor={"project_title"} className={"capitalize"}> Project Title <span className="text-red-600">*</span></FieldLabel>
                         {errors.project_title && <FieldError> {errors.project_title.message }</FieldError>}
-                        <Input {...register("project_title")} className={`rounded-[5px] ${errors.project_title ? 'border-red-500' : 'border-(--border-input)'}`} type={"text"} name={"project_title"} id={"project_title"}/>
+                        <Input {...register("project_title")}  className={`rounded-[5px] ${errors.project_title ? 'border-red-500' : 'border-(--border-input)'}`} type={"text"} name={"project_title"} id={"project_title"}/>
                     </Field>
 
                     <Field>
@@ -175,7 +219,7 @@ export default function ProjectForm({isUpdate}){
                         <FieldDescription> Select an actualy statut of your project </FieldDescription>
                         <div className="flex items-center gap-2 rounded-[5px] p-1 border border-(--border-input)">
                             <FaCircle className={selectValue == "pending" ? "text-yellow-500" : "text-green-500"}/>
-                            <select className="flex-1" {...register("project_status")} name={"project_status"} onChange={changeSelectValue}>
+                            <select className="flex-1" {...register("project_status")} name={"project_status"}>
                                 <option value={"pending"} className="flex justify-between">  Pending </option>
                                 <option value={"completed"}> Completed </option>
                             </select>
@@ -184,8 +228,9 @@ export default function ProjectForm({isUpdate}){
                     </Field>
 
                     <Field orientation="horizontal" className={"grid grid-cols-2"}>
-                        <Button type={"submit"} className={"bg-green-500 hover:bg-green-600 cursor-pointer"}>{isLoading ? <Spinner/> :"Submit Form"} </Button>
-                        <Button type={"reset"} className={"w-full bg-red-500 hover:bg-red-600 cursor-pointer"} onClick={()=>{setOpenDialog(false)}}> Cancel </Button>
+                        
+                        <Button type={"submit"} disabled={!isValid} className={`bg-green-500 hover:bg-green-600 cursor-pointer `}>{mode === "update" ? (isLoading ? <Spinner/> : "Update Project") : (isLoading ? <Spinner/> : "Add Project")} </Button>
+                        <Button type={"reset"} className={"w-full bg-red-500 hover:bg-red-600 cursor-pointer"} onClick={()=>{setOpen(false)}}> Cancel </Button>
                     </Field>
                 </form>
             </DialogContent>

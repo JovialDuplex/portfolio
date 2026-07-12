@@ -51,7 +51,7 @@ const services = [
             <Hero 
                 name={user.user_name} 
                 secondName={user.user_second_name} 
-                profilePicture={import.meta.env.VITE_URL_BACKEND + user.user_picture} 
+                profilePicture={import.meta.env.VITE_URL_BACKEND + "/" + user.user_picture} 
                 description={user.user_desc}/>
 
             {/*------- section service ------- */}

@@ -45,7 +45,21 @@ const useProject =  function(){
         }
     };
 
-    const updateProject = async function(id_project, project_data) {};
+    const updateProject = async function(id_project, project_data) {
+        try {
+            const response = await axios.put(`${import.meta.env.VITE_URL_BACKEND}/admin/projects/update?id=${id_project}`, project_data, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    token: token,
+                }
+            });
+            const data = await response.data;
+            console.log(data);
+
+        } catch(error) {
+
+        }
+    };
 
     const createProject = async function(project_data) {
         

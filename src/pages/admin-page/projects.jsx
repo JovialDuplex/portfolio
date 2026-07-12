@@ -1,5 +1,5 @@
 import {InputGroup, InputGroupAddon, InputGroupInput, } from "@/components/ui/input-group";
-import {Search } from "lucide-react";
+import {Search, Plus} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
 import useThemeStore from "@/store/themStore";
@@ -11,11 +11,12 @@ import { FaEye } from "react-icons/fa";
 import useProjectStore from "@/store/useProjectStore";
 import { toast } from "sonner";
 
-const ProjectCard = ({id, title, desc, image, status, isFocus, onFocus})=>{
+const ProjectCard = ({id, title, desc, image, status, isFocus, onFocus, onUpdate, project})=>{
     const {theme} = useThemeStore();
     const {deleteProject} = useProject();
     const {addActionProject} = useProjectStore();
-    const deleteMyProject = async function(){
+    const deleteMyProject = async function(event){
+        event.stopPropagation()
         try{
             await deleteProject(id); 
             addActionProject();
@@ -32,7 +33,7 @@ const ProjectCard = ({id, title, desc, image, status, isFocus, onFocus})=>{
                     <img src={image} alt={"card-image"} className="h-50 w-full rounded-(--radius-card)"/>
                     <div className={`control-box py-0.5 ${!isFocus && "hidden"} w-full grid grid-cols-3 gap-2 *:w-full`}>
                         <Button className={`${theme === "dark" && "bg-red-500 hover:bg-red-600"} cursor-pointer` } onClick={deleteMyProject}><FaTrash className="text-white"/> </Button>
-                        <Button className={`${theme === "dark" && "bg-(--text-accent) hover:bg-(--text-accent-glow)"} cursor-pointer w-1/2`}><FaPencil className="text-white"/></Button>
+                        <Button className={`${theme === "dark" && "bg-(--text-accent) hover:bg-(--text-accent-glow)"} cursor-pointer w-1/2`} onClick={()=>onUpdate(project)}><FaPencil className="text-white"/></Button>
                         <Button className={`cursor-pointer bg-blue-400 hover:bg-blue-500`}> <FaEye/> </Button>
                     </div>
                     <div className="flex justify-between mt-3 items-center">
@@ -59,10 +60,26 @@ export default function AdminProjectsPage(){
     const filteredItems = projects.filter((project)=> project.project_title.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
     const {actionProject} = useProjectStore();
 
+    const [projectForm, setProjectForm] = useState({
+        mode: "create",
+        project: null
+    });
+
+    const [openForm, setOpenForm] = useState(false);
+
+    const openAddProjectForm = function(){
+        setOpenForm(true);
+        setProjectForm({ mode: "create", project: null, });
+    };
+
+    const openUpdateForm = function(project) {
+        setOpenForm(true);
+        setProjectForm({ mode: "update", project: project});
+    };
+
     useEffect(()=>{
         getAllProjects();
     }, [actionProject]);
-
 
     return (
         <div className="flex flex-col py-2 gap-10 text-(--text-primary)">
@@ -77,7 +94,10 @@ export default function AdminProjectsPage(){
                 </div>
 
                 <div className="second-header font-semibold flex justify-between">
-                    <ProjectForm />
+                    <div>
+                        <Button onClick={openAddProjectForm} className={"cursor-pointer hover:bg-blue-600 bg-(--text-accent)"}> <Plus /> Add New Project</Button>
+                        <ProjectForm open={openForm}  mode={projectForm.mode} project={projectForm.project} setOpen={setOpenForm}/>
+                    </div>
                     <span className="">Total Project : <Badge className={"bg-(--text-accent)"}>{projects.length}</Badge></span>
                 </div>
 
@@ -85,11 +105,14 @@ export default function AdminProjectsPage(){
 
             {/* section principale  */}
             <section className="main-section min-h-0 px-3 py-7 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                
                 { query && filteredItems.length === 0 ? projects.map((project, index)=> (
                     <ProjectCard 
                         key={index}
                         id={project._id}
+                        onUpdate={openUpdateForm}
                         title={project.project_title} 
+                        project={project}
                         desc={project.project_desc}
                         image={`${import.meta.env.VITE_URL_BACKEND}/${project.project_cover_image}`}
                         status={project.project_status}
@@ -100,7 +123,9 @@ export default function AdminProjectsPage(){
                     <ProjectCard 
                         key={index}
                         id={project._id}
-                        title={project.project_title} 
+                        title={project.project_title}
+                        onUpdate={openUpdateForm} 
+                        project={project}
                         desc={project.project_desc}
                         image={`${import.meta.env.VITE_URL_BACKEND}/${project.project_cover_image}`}
                         status={project.project_status}
