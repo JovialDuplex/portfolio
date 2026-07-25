@@ -16,7 +16,8 @@ import AdminSettingsPage from './pages/admin-page/settings';
 import SeeProject from './pages/SeeProject';
 import { Toaster } from '@/components/ui/sonner';
 
-
+import {IconRegistryProvider } from "./index";
+  
 
 const AdminLayout = function(){
   return (
@@ -26,7 +27,9 @@ const AdminLayout = function(){
       </aside>
 
       <main className="lg:col-span-10 flex-1 h-full min-h-0 overflow-hidden *:w-full *:h-full *:px-4 [background:var(--bg-page)]">
-        <Outlet />
+        <IconRegistryProvider>
+          <Outlet />
+        </IconRegistryProvider>
       </main>
     </div>
   )
@@ -39,7 +42,9 @@ const ClientLayout = function(){
         <NavBar />
       </header>
       <main className="*:w-full *:h-full *:px-4 app-body mt-16 flex-1 [background:var(--bg-page)]">
-        <Outlet />
+        <IconRegistryProvider>
+          <Outlet />
+        </IconRegistryProvider>
       </main>
     </div>
   )
@@ -48,10 +53,11 @@ const ClientLayout = function(){
 export default function App(){
   const subdomain = location.host.split(".")[0];
   const theme = useThemeStore((state)=>state.theme);
+  
 
   return (
     <div data-theme={theme}>
-      <Toaster />
+      <Toaster/>
       <BrowserRouter>
         <Routes>
           {/* routes administrateur */}

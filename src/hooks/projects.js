@@ -3,7 +3,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "@/store/userStore";
 
-
+/**
+ * 
+ * hook permettant la gestion des projets 
+ */
 const useProject =  function(){
     const navigate = useNavigate();
     const {token} = useUserStore();

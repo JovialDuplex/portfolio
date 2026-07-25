@@ -12,6 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import useProject from "@/hooks/projects";
 import {Spinner} from "@/components/ui/spinner";
 import useProjectStore from "@/store/useProjectStore";
+import CustomTextarea from "./custom-textarea";
 
 export default function ProjectForm({mode, open, project, setOpen}){
 
@@ -47,7 +48,8 @@ export default function ProjectForm({mode, open, project, setOpen}){
             formState: {errors, isValid, isLoading, dirtyFields},
         } = useForm({ resolver: yupResolver(projectSchema)});
 
-    const handleButtonClick = function(){document.getElementById("project_cover_image").click(); 
+    const handleButtonClick = function(){
+        document.getElementById("project_cover_image").click(); 
         // toast("The file select has been open ", {action: {label: "Cancel", onClick:()=>console.log("cancel")}, description:"creation"})
     };
 
@@ -137,6 +139,8 @@ export default function ProjectForm({mode, open, project, setOpen}){
         try {
             addActionProject();
             await createProject(data);
+            addActionProject();
+
         } catch(error) {
             throw error;
         } finally {
@@ -154,7 +158,7 @@ export default function ProjectForm({mode, open, project, setOpen}){
                     <DialogTitle className={"text-xl"}> {mode === "update" ? "Update a Project" : "Add a Project"} </DialogTitle>
                     <DialogDescription> Fill this following form for {mode === "update" ? "update" : "add" } a project in the list </DialogDescription>
                 </DialogHeader>
-
+            
                 <form className="flex-1 flex flex-col gap-5" onSubmit={handleSubmit(mode === "update" ? updateMyProject : createMyProject)}>
                     <Field>
                         <FieldLabel htmlFor={"project_title"} className={"capitalize"}> Project Title <span className="text-red-600">*</span></FieldLabel>
@@ -163,16 +167,26 @@ export default function ProjectForm({mode, open, project, setOpen}){
                     </Field>
 
                     <Field>
-                        <FieldLabel htmlFor={"project_desc"} className={"capitalize"}> Describe your project <span className="text-red-600">*</span></FieldLabel>
-                        {errors.project_desc && <FieldError> {errors.project_desc.message }</FieldError>}
-                        
-                        <Textarea {...register("project_desc")} placeholder={"Make a brefly describe of your project "} className={`rounded-[5px] ${errors.project_desc ? 'border-red-500' : 'border-(--border-input)'}`} type={"text"} name={"project_desc"} id={"project_desc"}/>
+                        <CustomTextarea 
+                            label={"Describe your Project"} 
+                            maxLength={256} 
+                            error={errors.project_desc?.message}
+                            {...register("project_desc")}
+                            required
+                            />
                     </Field>
                     
                     <Field>
-                        <FieldLabel htmlFor={"project_content"} className={"capitalize"}> Explain your project <span className="text-red-600">*</span> </FieldLabel>
+                        <CustomTextarea 
+                            label={"Explain your Project"}  
+                            error={errors.project_content?.message}
+                            {...register("project_content")}
+                            maxLength = {100}
+                            required
+                        />
+                        {/* <FieldLabel htmlFor={"project_content"} className={"capitalize"}> Explain your project <span className="text-red-600">*</span> </FieldLabel>
                         {errors.project_content && <FieldError> {errors.project_content.message }</FieldError>}
-                        <Textarea {...register("project_content")} placeholder={"Enter a main content of your project "} className={`rounded-[5px] ${errors.project_content ? 'border-red-500' : 'border-(--border-input)'}`} type={"text"} name={"project_content"} id={"project_content"}/>
+                        <Textarea {...register("project_content")} placeholder={"Enter a main content of your project "} className={`rounded-[5px] ${errors.project_content ? 'border-red-500' : 'border-(--border-input)'}`} type={"text"} name={"project_content"} id={"project_content"}/> */}
                     </Field>
                     
                     <Field>
