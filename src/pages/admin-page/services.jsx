@@ -12,6 +12,7 @@ import * as SimpleIcon from "@icons-pack/react-simple-icons";
 export default function AdminServicesPage(){
     const {getServices} = useService();
     const [services, setServices] = useState([]);
+
     const [openServiceForm, setOpenServiceForm] = useState(false);
 
     useEffect(()=>{
@@ -23,7 +24,13 @@ export default function AdminServicesPage(){
         loadServices();
     }, []);
     
-    const [icon, setIcon] = useState(null);
+    const [iconId, setIconId] = useState(null);
+    const [IconComponent, setIconComponent] = useState(null);
+    
+    // useEffect(()=>{
+    //     console.log(IconComponent);
+    // }, [IconComponent]);
+
     return (
         <div className="text-(--text-primary) py-2">
             {/* header de la page des services */}
@@ -49,13 +56,13 @@ export default function AdminServicesPage(){
             {/* Section principale de la page des service */}
             <section className="main-section min-h-0 px-3 py-7 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                 <IconPicker 
-                    value={icon} 
-                    onChange={setIcon}
+                    value={iconId} 
+                    onChange={(id, iconComp)=>{id && setIconId(id); iconComp && setIconComponent(iconComp.component)}}
                     libraries={["simple-icons"]}
                     useOriginalColor
                     placeholder="select an icon"
                 />
-                <h2>{icon ? `une icone : ${icon}` : "pas d'icone selectionner"}</h2>
+                {IconComponent && <h2><IconComponent color={"red"}/></h2>}
             </section>
         </div>
     )

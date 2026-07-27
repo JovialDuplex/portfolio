@@ -1,6 +1,7 @@
 import { forwardRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Textarea } from "./ui/textarea";
+import { FieldDescription } from "./ui/field";
 
 const CustomTextarea = forwardRef(
     (
@@ -15,6 +16,7 @@ const CustomTextarea = forwardRef(
             value,
             defaultValue = "",
             required,
+            fieldDesc,
             ...rest
         },
 
@@ -46,8 +48,8 @@ const CustomTextarea = forwardRef(
                     </label>
                 )}
                 
+                {fieldDesc && <FieldDescription>{fieldDesc}</FieldDescription>}
                 {error && <span className="text-destructive"> {error} </span>}
-
                 <Textarea 
                     ref = {ref}
                     id={name}
