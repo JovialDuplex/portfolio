@@ -7,8 +7,11 @@ import {
     LayoutDashboard, User, Briefcase,
     FolderOpen, Settings, Layers, 
     Mail, FolderPlus, PenLine,
-    X,  
+    X, FolderX 
 } from "lucide-react";
+
+import * as LucideIcon from "lucide-react";
+
 import {
     AlertDialog, AlertDialogContent, AlertDialogTitle, 
     AlertDialogHeader,
@@ -18,6 +21,7 @@ import {
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import useProject from "@/hooks/projects";
+import useActivitiesStore from "@/store/activtiesStore";
 
 
 export default function AdminDashboardPage(){
@@ -28,7 +32,7 @@ export default function AdminDashboardPage(){
         { label: "Services", value: 4, icon: Briefcase },
         { label: "Projetcs", value: projects.length, icon: FolderOpen },
         { label: "Skills", value: 12, icon: Layers },
-        { label: "Messages", value: 5, icon: Mail },
+        { label: "Messages", value: 6, icon: Mail },
     ];
 
     const messages = [
@@ -41,15 +45,7 @@ export default function AdminDashboardPage(){
     
     ];
 
-    const activities = [
-        { icon: FolderPlus, label: "Nouveau projet ajouté", date: "12/05/2024", type: "project" },
-        { icon: PenLine,    label: "Service modifié",        date: "12/05/2024", type: "edit"    },
-        { icon: Mail,       label: "Nouveau message reçu",   date: "13/05/2024", type: "message" },
-        { icon: Mail,       label: "Nouveau message reçu",   date: "13/05/2024", type: "message" },
-        { icon: PenLine,    label: "Service modifié",        date: "13/05/2024", type: "edit"    },
-        { icon: Mail,       label: "Nouveau message reçu",   date: "13/05/2024", type: "message" },
-    ];
-
+    
     const navItems = [
         { icon: LayoutDashboard, label: "Tableau de bord", id: "dashboard" },
         { icon: User,            label: "Profil",           id: "profile"   },
@@ -58,7 +54,16 @@ export default function AdminDashboardPage(){
         { icon: Layers,          label: "Compétences",      id: "skills"    },
         { icon: Settings,        label: "Réglages",         id: "settings"  },
     ];
+    const {activityList} = useActivitiesStore();
 
+    const activities = [
+        { icon: FolderPlus, label: "Nouveau projet ajouté", date: "12/05/2024", type: "project" },
+        { icon: PenLine,    label: "Service modifié",        date: "12/05/2024", type: "edit"    },
+        { icon: Mail,       label: "Nouveau message reçu",   date: "13/05/2024", type: "message" },
+        { icon: Mail,       label: "Nouveau message reçu",   date: "13/05/2024", type: "message" },
+        { icon: PenLine,    label: "Service modifié",        date: "13/05/2024", type: "edit"    },
+        { icon: Mail,       label: "Nouveau message reçu",   date: "13/05/2024", type: "message" },
+    ];
     const {user} = useUserStore();    
     const [openAlertDialog, setOpenAlertDialog] = useState(false);
 
@@ -107,7 +112,7 @@ export default function AdminDashboardPage(){
                     <section className="messages-infos min-h-0 overflow-hidden"> <MessageInfos messages={messages}/> </section>
                     
                     {/*-----------section activites----------- */}
-                    <section className="activities-infos"> <ActivitiesInfos activities={activities}/></section>
+                    <section className="activities-infos"> <ActivitiesInfos activities={activityList}/></section>
                 </div>
             </div>
         </>

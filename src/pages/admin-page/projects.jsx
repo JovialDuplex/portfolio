@@ -1,5 +1,5 @@
 import {InputGroup, InputGroupAddon, InputGroupInput, } from "@/components/ui/input-group";
-import {Search, Plus} from "lucide-react";
+import {Search, Plus, FolderX, FolderPlus, FolderEdit} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {Badge} from "@/components/ui/badge";
 import useThemeStore from "@/store/themStore";
@@ -10,16 +10,21 @@ import {FaTrash, FaPencil} from "react-icons/fa6";
 import { FaEye } from "react-icons/fa";
 import useProjectStore from "@/store/useProjectStore";
 import { toast } from "sonner";
+import useActivitiesStore from "@/store/activtiesStore";
+import * as LucideIcon from "lucide-react";
 
 const ProjectCard = ({id, title, desc, image, status, isFocus, onFocus, onUpdate, project})=>{
     const {theme} = useThemeStore();
     const {deleteProject} = useProject();
     const {addActionProject} = useProjectStore();
+    const {makeActivity} = useActivitiesStore();
+
     const deleteMyProject = async function(event){
         event.stopPropagation()
         try{
             await deleteProject(id); 
             addActionProject();
+            makeActivity("FolderX", "A project has been deleted successfully !", new Date().toUTCString(), "project");
             toast.warning("This project has been delete successfuly");
         } catch(error) {
             throw error

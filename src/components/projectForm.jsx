@@ -13,6 +13,7 @@ import useProject from "@/hooks/projects";
 import {Spinner} from "@/components/ui/spinner";
 import useProjectStore from "@/store/useProjectStore";
 import CustomTextarea from "./custom-textarea";
+import useActivitiesStore from "@/store/activtiesStore";
 
 export default function ProjectForm({mode, open, project, setOpen}){
 
@@ -47,6 +48,8 @@ export default function ProjectForm({mode, open, project, setOpen}){
             watch,
             formState: {errors, isValid, isLoading, dirtyFields},
         } = useForm({ resolver: yupResolver(projectSchema)});
+
+    const {makeActivity} = useActivitiesStore();
 
     const handleButtonClick = function(){
         document.getElementById("project_cover_image").click(); 
@@ -124,7 +127,9 @@ export default function ProjectForm({mode, open, project, setOpen}){
             }
 
             await updateProject(project._id, formData);
+            makeActivity("FolderEdit", "A project has been updated successfully !", new Date().toUTCString(), "project");
             addActionProject();
+
 
         } catch(error) {
             console.log(error);
@@ -139,6 +144,7 @@ export default function ProjectForm({mode, open, project, setOpen}){
         try {
             addActionProject();
             await createProject(data);
+            makeActivity("FolderPlus", "A project has been created successfully !", new Date().toUTCString(), "project");
             addActionProject();
 
         } catch(error) {
@@ -184,9 +190,6 @@ export default function ProjectForm({mode, open, project, setOpen}){
                             maxLength = {100}
                             required
                         />
-                        {/* <FieldLabel htmlFor={"project_content"} className={"capitalize"}> Explain your project <span className="text-red-600">*</span> </FieldLabel>
-                        {errors.project_content && <FieldError> {errors.project_content.message }</FieldError>}
-                        <Textarea {...register("project_content")} placeholder={"Enter a main content of your project "} className={`rounded-[5px] ${errors.project_content ? 'border-red-500' : 'border-(--border-input)'}`} type={"text"} name={"project_content"} id={"project_content"}/> */}
                     </Field>
                     
                     <Field>
