@@ -55,14 +55,7 @@ export default function AdminServicesPage(){
             <ServiceForm open={openServiceForm} mode={"create"} setOpen={setOpenServiceForm}/>
             {/* Section principale de la page des service */}
             <section className="main-section min-h-0 px-3 py-7 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-                <IconPicker 
-                    value={iconId} 
-                    onChange={(id, iconComp)=>{id && setIconId(id); iconComp && setIconComponent(iconComp.component)}}
-                    libraries={["simple-icons"]}
-                    useOriginalColor
-                    placeholder="select an icon"
-                />
-                {IconComponent && <h2><IconComponent color={"red"}/></h2>}
+                
             </section>
         </div>
     )

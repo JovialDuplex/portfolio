@@ -10,11 +10,11 @@ import {Avatar, AvatarFallback} from "@/components/ui/avatar";
 
 export default function MessageInfos({messages}){
     return (
-        <Card className={"flex flex-col bg-(--bg-card) rounded-(--radius-card) border-(--border-card) h-full"}>
+        <Card className={"flex flex-col bg-(--bg-card) rounded-(--radius-card) border border-(--border-card) h-full"}>
             <CardHeader className={"flex justify-between shrink-0"}>
                 <CardTitle className={"flex gap-2"}>
                     <Separator orientation="vertical" className={"w-px bg-blue-400"}/>
-                    <span className="text-(--text-primary)"> Message Recents </span>
+                    <span className="text-(--text-accent)"> Message Recents </span>
                 </CardTitle>
                 
                 <Badge className={"bg-(--text-accent) font-semibold text-sm rounded-[5px]"}>

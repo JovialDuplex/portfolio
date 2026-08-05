@@ -1,7 +1,7 @@
 import { forwardRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Textarea } from "./ui/textarea";
-import { FieldDescription } from "./ui/field";
+import { FieldDescription, FieldLabel } from "./ui/field";
 
 const CustomTextarea = forwardRef(
     (
@@ -43,9 +43,9 @@ const CustomTextarea = forwardRef(
         return (
             <div className={cn("flex flex-col gap-1 w-full", containerClassName)}>
                 {label && (
-                    <label htmlFor={name} className="text-sm font-medium text-foreground">
+                    <FieldLabel htmlFor={name}>
                         {label} {required && <span className="text-red-500"> * </span>}
-                    </label>
+                    </FieldLabel>
                 )}
                 
                 {fieldDesc && <FieldDescription>{fieldDesc}</FieldDescription>}
@@ -65,6 +65,7 @@ const CustomTextarea = forwardRef(
                         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                         "disabled:cursor-not-allowed disabled:opacity-50",
                         "transition-colors",
+                        "border-(--border-input)",
                         error && "border-destructive focus-visible:ring-destructive",
                         className 
                     )}

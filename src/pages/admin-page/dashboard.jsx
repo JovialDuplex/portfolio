@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import useProject from "@/hooks/projects";
 import useActivitiesStore from "@/store/activtiesStore";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 
 export default function AdminDashboardPage(){
@@ -41,6 +42,16 @@ export default function AdminDashboardPage(){
         { name: "Claire Mbida",  subject: "Suivi développement API", date: "12/05/2024", initials: "CM" },
         { name: "David Nkomo",   subject: "Bug sur le dashboard", date: "13/05/2024", initials: "DN" },
         { name: "Eva Fotso",     subject: "Intégration paiement mobile", date: "13/05/2024", initials: "EF" },
+        { name: "Franck Tala",   subject: "Mise à jour WordPress", date: "13/05/2024", initials: "FT" },
+        { name: "Franck Tala",   subject: "Mise à jour WordPress", date: "13/05/2024", initials: "FT" },
+        { name: "Franck Tala",   subject: "Mise à jour WordPress", date: "13/05/2024", initials: "FT" },
+        { name: "Franck Tala",   subject: "Mise à jour WordPress", date: "13/05/2024", initials: "FT" },
+        { name: "Franck Tala",   subject: "Mise à jour WordPress", date: "13/05/2024", initials: "FT" },
+        { name: "Franck Tala",   subject: "Mise à jour WordPress", date: "13/05/2024", initials: "FT" },
+        { name: "Franck Tala",   subject: "Mise à jour WordPress", date: "13/05/2024", initials: "FT" },
+        { name: "Franck Tala",   subject: "Mise à jour WordPress", date: "13/05/2024", initials: "FT" },
+        { name: "Franck Tala",   subject: "Mise à jour WordPress", date: "13/05/2024", initials: "FT" },
+        { name: "Franck Tala",   subject: "Mise à jour WordPress", date: "13/05/2024", initials: "FT" },
         { name: "Franck Tala",   subject: "Mise à jour WordPress", date: "13/05/2024", initials: "FT" },
     
     ];
@@ -101,18 +112,22 @@ export default function AdminDashboardPage(){
                         <img src={`${import.meta.env.VITE_URL_BACKEND}/${user.user_picture}`} alt={"profile-picture"} className="h-20 w-20"/>
                     </div>
                 </header>
-                {/* -----------section stat----------- */}
-                <section className="stat-section shrink-0">
-                    <StatCard statsList={stats} /> 
-                </section>
+                
+                <div className="overflow-scroll flex-1 flex gap-4 flex-col justify-center">
 
-                {/* panneaux de bas  */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                    {/* -----------section messages----------- */}
-                    <section className="messages-infos min-h-0 overflow-hidden"> <MessageInfos messages={messages}/> </section>
-                    
-                    {/*-----------section activites----------- */}
-                    <section className="activities-infos"> <ActivitiesInfos activities={activityList}/></section>
+                    {/* -----------section stat----------- */}
+                    <section className="stat-section">
+                        <StatCard statsList={stats} /> 
+                    </section>
+
+                    {/* panneaux de bas  */}
+                    <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-5 ">
+                        {/* -----------section messages----------- */}
+                        <ScrollArea className={"min-h-0 message-infos"}><ScrollBar /> <MessageInfos messages={messages}/> </ScrollArea>
+                        
+                        {/*-----------section activites----------- */}
+                        <ScrollArea className="min-h-0 activities-infos"><ScrollBar/><ActivitiesInfos activities={activityList}/></ScrollArea>
+                    </div>
                 </div>
             </div>
         </>

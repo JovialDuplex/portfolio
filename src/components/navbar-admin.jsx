@@ -24,7 +24,7 @@ export default function NavBarAdmin(){
     return (
         <>
             <style> {navItemsStyle} </style>
-            <nav className="py-4 px-2 w-full h-full flex justify-between lg:flex-col gap-10">
+            <nav className="py-4 px-2 w-full h-full hidden lg:flex lg:justify-between lg:flex-col gap-10">
                 <header className="flex gap-4 justify-center items-center"> 
                     <img src={"/logo.png"} alt={"logo"} className="rounded-full h-20 w-20"/>
                 </header>

@@ -2,9 +2,9 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function StatCard({statsList}) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5">
       {statsList.map((stat, index)=>(
-        <Card key={index} className="bg-(--bg-card) w-6/12 border border-(--border-card) hover:border-blue-600/40 hover:shadow-lg hover:shadow-blue-900/10 transition-all duration-200 rounded-(--radius-card)">
+        <Card key={index} className="bg-(--bg-card) mx-5 lg:mx-10 lg:w/612 border border-(--border-card) hover:border-blue-600/40 hover:shadow-lg hover:shadow-blue-900/10 transition-all duration-200 rounded-(--radius-card)">
           <CardContent className="pt-5 pb-5 px-5 flex flex-col gap-2">
             <div className="flex items-center justify-between mb-1">
               <p className="text-[11px] font-semibold text-(--text-primary) uppercase tracking-widest">{stat.label}</p>

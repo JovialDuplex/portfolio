@@ -1,14 +1,18 @@
 import {Separator} from "@/components/ui/separator";
 import * as LucideIcon from "lucide-react";
+import { Badge } from "./ui/badge";
 
 
 export default function ActivitiesInfos({activities}){
     
     return (
-        <div className={"activities-infos-card p-2.5 bg-(--bg-card) border border-(--border-card) rounded-(--radius-card)"}>
-            <div className="card-header flex gap-2 items-center">
-                <Separator orientation="vertical" className={"bg-(--text-accent)"} />
-                <span className="text-(--text-accent) font-semibold">Recent Activities </span>
+        <div className={"activities-infos-card p-2.5 bg-(--bg-card) h-full border border-(--border-card) rounded-(--radius-card)"}>
+            <div className="px-2 pt-2 card-header flex justify-between">
+                <div className="flex gap-2 items-center">
+                    <Separator orientation="vertical" className={"bg-(--text-accent)"} />
+                    <span className="text-(--text-accent) font-semibold">Recent Activities </span>
+                </div>
+                <Badge className={"bg-(--text-accent) rounded-[5px] text-sm font-semibold"}>{activities.length}</Badge>
             </div>
             <div className="card-content mt-6">
                 

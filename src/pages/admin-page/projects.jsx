@@ -87,7 +87,7 @@ export default function AdminProjectsPage(){
     }, [actionProject]);
 
     return (
-        <div className="flex flex-col py-2 gap-10 text-(--text-primary)">
+        <div className="flex flex-col gap-10 text-(--text-primary)">
             
             <header className="header flex flex-col gap-5"> 
                 <div className="first-header flex justify-between">

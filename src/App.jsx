@@ -26,7 +26,7 @@ const AdminLayout = function(){
         <NavBarAdmin/>
       </aside>
 
-      <main className="lg:col-span-10 flex-1 h-full min-h-0 overflow-hidden *:w-full *:h-full *:px-4 [background:var(--bg-page)]">
+      <main className="lg:col-span-10 flex-1 h-full min-h-0 overflow-hidden *:py-2 *:w-full *:h-full *:px-4 [background:var(--bg-page)]">
         <IconRegistryProvider>
           <Outlet />
         </IconRegistryProvider>
