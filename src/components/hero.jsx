@@ -83,7 +83,7 @@ export default function Hero({name, secondName, job, description, profilePicture
             </div>
 
             {/* block de droite avec la photo */}
-            <div className=" w-120 h-120 border-none overflow-hidden">
+            <div className=" w-120 h-120 border-none overflow-hidden rounded-full">
                 <img src={profilePicture} alt={"profile picture"} className="w-full h-auto"/>
             </div>
         </section>

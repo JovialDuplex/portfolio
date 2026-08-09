@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import useUserStore from "@/store/userStore";
+import { getTokenExpiration } from "@/utils/tokenUtils";
 
 const useUser =  function(){
     const navigate = useNavigate();
@@ -12,12 +13,14 @@ const useUser =  function(){
             const mydata = await response.data;
             if(!mydata.user && !mydata.token) {
                 return mydata.message;
-                console.log("erreur lors de la connexion ");
             }
-            loginUser(mydata.user, mydata.token);
 
-            console.log("connexion de l'admin reussit avec success ");
-            console.log(mydata);
+            // Décoder le token pour extraire la date d'expiration
+            const tokenExpiration = getTokenExpiration(mydata.token);
+
+            loginUser(mydata.user, mydata.token, tokenExpiration);
+
+            console.log("Connexion admin réussie. Token expire le :", new Date(tokenExpiration).toLocaleString());
             navigate("/admin/dashboard/home");
 
         } catch(error) {
@@ -28,8 +31,8 @@ const useUser =  function(){
     };
 
     const logout = async function() {
-        navigate("/admin/login");
         logoutUser();
+        navigate("/admin/login");
     }
 
     return {

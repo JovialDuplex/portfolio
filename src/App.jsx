@@ -15,11 +15,16 @@ import AdminProjectsPage from './pages/admin-page/projects';
 import AdminSettingsPage from './pages/admin-page/settings';
 import SeeProject from './pages/SeeProject';
 import { Toaster } from '@/components/ui/sonner';
+import ProtectedRoute from './components/ProtectedRoute';
+import useTokenWatcher from './hooks/useTokenWatcher';
 
 import {IconRegistryProvider } from "./index";
   
 
 const AdminLayout = function(){
+  // Surveille l'expiration du token et déclenche la déconnexion automatique
+  useTokenWatcher();
+
   return (
     <div className='h-screen flex flex-col lg:grid lg:grid-cols-12'>
       <aside className='lg:col-span-2 [background:var(--bg-page)] text-(--text-primary) lg:border-r-2 border-(--border-navbar) '>
@@ -67,11 +72,14 @@ export default function App(){
             <Route path={"/error"} element={<h1>Une erreur est survenue</h1>}/>
 
             
-            <Route path={"/admin/dashboard"} element={<AdminLayout/>}>
-              <Route path={"home"} element={<AdminDashboardPage/>}/>
-              <Route path={"services"} element={<AdminServicesPage/>} />
-              <Route path={"projects"} element={<AdminProjectsPage/>} />
-              <Route path={"settings"} element={<AdminSettingsPage/>} />
+            {/* Routes protégées : nécessitent un token valide */}
+            <Route element={<ProtectedRoute/>}>
+              <Route path={"/admin/dashboard"} element={<AdminLayout/>}>
+                <Route path={"home"} element={<AdminDashboardPage/>}/>
+                <Route path={"services"} element={<AdminServicesPage/>} />
+                <Route path={"projects"} element={<AdminProjectsPage/>} />
+                <Route path={"settings"} element={<AdminSettingsPage/>} />
+              </Route>
             </Route>
           
             <Route element={<ClientLayout/>}>

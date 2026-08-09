@@ -32,9 +32,10 @@ const MultipleSelect = function({items_list}){
         <Combobox 
             multiple={true} 
             items={items_list} 
-            // defaultValue={[items_list[0]]}
+            defaultValue={[items_list[0]]}
             value={value}
             onValueChange={setValue}    
+            // onInputValueChange={setValue}
         >
             <ComboboxChips>
                 <ComboboxValue>
@@ -45,7 +46,7 @@ const MultipleSelect = function({items_list}){
                 <ComboboxChipsInput placeholder="add skills"/>
             </ComboboxChips>
             
-            <ComboboxContent anchor={anchor}>
+            <ComboboxContent>
                 <ComboboxEmpty>No items found </ComboboxEmpty>
                 <ComboboxList>
                     {(item)=>(
@@ -94,8 +95,13 @@ const ServiceForm = function({mode, open, setOpen, service}){
     const skills2 = [
         "yo",
         "bonjour",
-        "bonsoir"
+        "bonsoir",
+        "comment allez vous",
+        "hello",
+        "halo"
     ]
+    const [value, setValue]= useState([]);
+
     return (
         <Dialog open={open} onOpenChange={setOpen}> 
             <DialogContent className={"flex flex-col [background:var(--bg-page)] text-(--text-primary) h-11/12 overflow-y-auto w-8/12! max-w-200!"}>
@@ -124,7 +130,7 @@ const ServiceForm = function({mode, open, setOpen, service}){
                     <Field>
                         <FieldLabel htmlFor={"service_category"} className={"capitalize"}> Service Category <span className="text-red-600">*</span></FieldLabel>
                         
-                        <Select items={categories}>
+                        <Select items={categories} {...register("service_category")}>
                             <SelectTrigger className={"border-(--border-input)"}>
                                 <SelectValue placeholder={"Select a Category"} />
                             </SelectTrigger>
@@ -141,7 +147,37 @@ const ServiceForm = function({mode, open, setOpen, service}){
                     <Field>
                         <FieldLabel htmlFor={"service_skills"} className={"capitalize"}> Service Skills <span className="text-red-600">*</span></FieldLabel>
                         <FieldDescription> Select a list of skills that you want to attribute at this service </FieldDescription>
-                        <MultipleSelect items_list={skills2}/>
+                        {/* <MultipleSelect items_list={skills2}/> */}
+                        
+                        <Combobox 
+                            multiple={true} 
+                            items={skills2} 
+                            defaultValue={[skills2[0]]}
+                            value={value}
+                            onValueChange={setValue}    
+                            // onInputValueChange={setValue}
+                            {...register("service_skills")}
+                        >
+                            <ComboboxChips>
+                                <ComboboxValue>
+                                    {value.map((item)=>(
+                                        <ComboboxChip key={item}>{item}</ComboboxChip>
+                                    ))}
+                                </ComboboxValue>
+                                <ComboboxChipsInput placeholder="add skills"/>
+                            </ComboboxChips>
+                            
+                            <ComboboxContent>
+                                <ComboboxEmpty>No items found </ComboboxEmpty>
+                                <ComboboxList>
+                                    {(item)=>(
+                                        <ComboboxItem key={item} value={item}>
+                                            {item}
+                                        </ComboboxItem>
+                                    )}
+                                </ComboboxList>
+                            </ComboboxContent>
+                        </Combobox>
                     </Field>
 
                     <Field> <Button className={`${mode==='create' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} capitalize`} disabled={!formState.isValid}>{mode==="create" ? "Create my service" : "Update my service"}</Button></Field>                    
