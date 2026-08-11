@@ -6,7 +6,7 @@ import { Badge } from "./ui/badge";
 export default function ActivitiesInfos({activities}){
     
     return (
-        <div className={"activities-infos-card p-2.5 bg-(--bg-card) h-full border border-(--border-card) rounded-(--radius-card)"}>
+        <div className={"activities-infos-card h-full"}>
             <div className="px-2 pt-2 card-header flex justify-between">
                 <div className="flex gap-2 items-center">
                     <Separator orientation="vertical" className={"bg-(--text-accent)"} />

@@ -488,6 +488,7 @@ export default function AdminSettingsPage() {
                         </Field>
                     </form>
                 </TabsContent>
+
             </Tabs>
         </div>
     )
