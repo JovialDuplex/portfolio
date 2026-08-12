@@ -1,55 +1,54 @@
 import { Dialog, DialogContent, DialogHeader, DialogDescription, DialogTitle } from "@/components/ui/dialog"
 import { Field, FieldError, FieldLabel, FieldDescription } from "./ui/field";
 import * as yup from "yup"
-import {useForm} from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import * as SimpleIcon from "@icons-pack/react-simple-icons";
 import CustomTextarea from "./custom-textarea";
-import { FaCode, FaCube, FaFeather } from "react-icons/fa";
-import {FaChartDiagram, } from "react-icons/fa6";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "./ui/select";
-import { 
-    Combobox, 
-    ComboboxChip, 
-    ComboboxChips,  
-    ComboboxEmpty, 
-    ComboboxItem, 
-    ComboboxList, 
-    useComboboxAnchor, 
-    ComboboxValue, 
-    ComboboxContent, 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import {
+    Combobox,
+    ComboboxChip,
+    ComboboxChips,
+    ComboboxEmpty,
+    ComboboxItem,
+    ComboboxList,
+    useComboboxAnchor,
+    ComboboxValue,
+    ComboboxContent,
     ComboboxChipsInput
 } from "./ui/combobox";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import useCategories from "@/hooks/categories";
+import { Icon } from "@/components/ui/icon-picker";
 
-const MultipleSelect = function({items_list}){
+const MultipleSelect = function ({ items_list }) {
     const anchor = useComboboxAnchor();
     const [value, setValue] = useState([]);
 
     return (
-        <Combobox 
-            multiple={true} 
-            items={items_list} 
+        <Combobox
+            multiple={true}
+            items={items_list}
             defaultValue={[items_list[0]]}
             value={value}
-            onValueChange={setValue}    
-            // onInputValueChange={setValue}
+            onValueChange={setValue}
         >
             <ComboboxChips>
                 <ComboboxValue>
-                    {value.map((item)=>(
+                    {value.map((item) => (
                         <ComboboxChip key={item}>{item}</ComboboxChip>
                     ))}
                 </ComboboxValue>
-                <ComboboxChipsInput placeholder="add skills"/>
+                <ComboboxChipsInput placeholder="add skills" />
             </ComboboxChips>
-            
+
             <ComboboxContent>
                 <ComboboxEmpty>No items found </ComboboxEmpty>
                 <ComboboxList>
-                    {(item)=>(
+                    {(item) => (
                         <ComboboxItem key={item} value={item}>
                             {item}
                         </ComboboxItem>
@@ -60,38 +59,54 @@ const MultipleSelect = function({items_list}){
     )
 }
 
-const ServiceForm = function({mode, open, setOpen, service}){
+const ServiceForm = function ({ mode, open, setOpen, service }) {
+    const { getCategories } = useCategories();
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        getCategories()
+            .then((data) => {
+                setCategories(data || []);
+            })
+            .catch((error) => {
+                console.error("Error fetching categories:", error);
+            });
+    }, []);
+
     const serviceSchema = yup.object().shape({
         service_name: yup.string().required("The Name of a service is required !"),
         service_desc: yup.string().required("The description of your service is required "),
         service_category: yup.string().required("The category of a service is required"),
-        service_skills: yup.array().of(yup.string()).min(1, "Select at least one skills inside the list")
-    })
+        // service_skills: yup.array().of(yup.string()).min(1, "Select at least one skills inside the list")
+    });
 
     const {
-        register, 
-        handleSubmit, 
+        register,
+        handleSubmit,
+        control,
         formState
-    } = useForm({resolver: yupResolver(serviceSchema)});
+    } = useForm({
+        resolver: yupResolver(serviceSchema),
+        defaultValues: {
+            service_name: service?.service_name || "",
+            service_desc: service?.service_desc || "",
+            service_category: service?.service_category || "",
+            service_skills: service?.service_skills || [],
+        }
+    });
 
-    const icons = Object.entries(SimpleIcon).map(([name, Icon])=>({
-        name, 
+    const icons = Object.entries(SimpleIcon).map(([name, Icon]) => ({
+        name,
         Icon
     }));
-    const categories = [
-        {name: "Web", Component: FaCode},
-        {name: "SEO", Component: FaChartDiagram},
-        {name: "App", Component: FaCube},
-        {name: "Design", Component: FaFeather},
-    ];
+
     const skills = [
-        {name: "React", Component: <SimpleIcon.SiReact color={SimpleIcon.SiReactHex}/>},
-        {name: "NextJs", Component: <SimpleIcon.SiNextdotjs color={SimpleIcon.SiNextdotjsHex}/>},
-        {name: "Python", Component: <SimpleIcon.SiPython color={SimpleIcon.SiPythonHex}/>},
-        {name: "NodeJs", Component: <SimpleIcon.SiNodedotjs color={SimpleIcon.SiNodedotjsHex}/>},
-        {name: "Html5", Component: <SimpleIcon.SiHtml5 color={SimpleIcon.SiHtml5Hex}/>},
-        
-    ]
+        { name: "React", Component: <SimpleIcon.SiReact color={SimpleIcon.SiReactHex} /> },
+        { name: "NextJs", Component: <SimpleIcon.SiNextdotjs color={SimpleIcon.SiNextdotjsHex} /> },
+        { name: "Python", Component: <SimpleIcon.SiPython color={SimpleIcon.SiPythonHex} /> },
+        { name: "NodeJs", Component: <SimpleIcon.SiNodedotjs color={SimpleIcon.SiNodedotjsHex} /> },
+        { name: "Html5", Component: <SimpleIcon.SiHtml5 color={SimpleIcon.SiHtml5Hex} /> },
+    ];
     const skills2 = [
         "yo",
         "bonjour",
@@ -99,78 +114,88 @@ const ServiceForm = function({mode, open, setOpen, service}){
         "comment allez vous",
         "hello",
         "halo"
-    ]
-    const [value, setValue]= useState([]);
+    ];
+    const [value, setValue] = useState([]);
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}> 
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent className={"flex flex-col [background:var(--bg-page)] text-(--text-primary) h-11/12 overflow-y-auto w-8/12! max-w-200!"}>
                 <DialogHeader className={"shrink-0"}>
                     <DialogTitle className={"text-xl capitalize"}> {mode === "update" ? "Update a Service" : "Add a New Service"} </DialogTitle>
-                    <DialogDescription> Fill this following form for {mode === "update" ? "update" : "add" } a service in the list </DialogDescription>
+                    <DialogDescription> Fill this following form for {mode === "update" ? "update" : "add"} a service in the list </DialogDescription>
                 </DialogHeader>
 
                 <form className="flex-1 flex flex-col gap-5">
                     <Field>
                         <FieldLabel htmlFor={"service_name"} className={"capitalize"}> Service Name <span className="text-red-600">*</span></FieldLabel>
-                        {formState.errors.service_name && <FieldError> {formState.errors.service_name.message }</FieldError>}
-                        <Input {...register("service_name")}  className={`rounded-[5px] ${formState.errors.service_name ? 'border-red-500' : 'border-(--border-input)'}`} type={"text"} name={"service_name"} id={"service_name"}/>
+                        {formState.errors.service_name && <FieldError> {formState.errors.service_name.message}</FieldError>}
+                        <Input {...register("service_name")} className={`rounded-[5px] ${formState.errors.service_name ? 'border-red-500' : 'border-(--border-input)'}`} type={"text"} name={"service_name"} id={"service_name"} />
                     </Field>
 
                     <Field>
-                     <CustomTextarea 
-                            label={"Service Description"}  
+                        <CustomTextarea
+                            label={"Service Description"}
                             error={formState.errors.service_desc?.message}
                             {...register("service_desc")}
-                            maxLength = {500}
+                            maxLength={500}
                             fieldDesc={"Please fill this field and describe your service in less than 500 words "}
                             required
                         />
                     </Field>
+
                     <Field>
                         <FieldLabel htmlFor={"service_category"} className={"capitalize"}> Service Category <span className="text-red-600">*</span></FieldLabel>
-                        
-                        <Select items={categories} {...register("service_category")}>
-                            <SelectTrigger className={"border-(--border-input)"}>
-                                <SelectValue placeholder={"Select a Category"} />
-                            </SelectTrigger>
-                            <SelectContent position="popper">
-                                {categories.map((item, index) => (
-                                    <SelectItem key={index} value={item.name}>
-                                    <item.Component className="text-blue-600"/> {item.name} 
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                        {formState.errors.service_category && (
+                            <FieldError>{formState.errors.service_category.message}</FieldError>
+                        )}
+                        <Controller
+                            name="service_category"
+                            control={control}
+                            render={({ field }) => (
+                                <Select value={field.value} onValueChange={field.onChange}>
+                                    <SelectTrigger className={`w-full ${formState.errors.service_category ? 'border-red-500' : 'border-(--border-input)'}`}>
+                                        <SelectValue placeholder={"Select a Category"} />
+                                    </SelectTrigger>
+                                    <SelectContent position="popper">
+                                        {categories.map((item) => (
+                                            <SelectItem key={item._id} value={item.category_name}>
+                                                <span className="flex items-center gap-2 capitalize">
+                                                    <Icon name={item.category_icon} />
+                                                    <span>{item.category_name}</span>
+                                                </span>
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            )}
+                        />
                     </Field>
 
                     <Field>
                         <FieldLabel htmlFor={"service_skills"} className={"capitalize"}> Service Skills <span className="text-red-600">*</span></FieldLabel>
                         <FieldDescription> Select a list of skills that you want to attribute at this service </FieldDescription>
-                        {/* <MultipleSelect items_list={skills2}/> */}
-                        
-                        <Combobox 
-                            multiple={true} 
-                            items={skills2} 
+
+                        <Combobox
+                            multiple={true}
+                            items={skills2}
                             defaultValue={[skills2[0]]}
                             value={value}
-                            onValueChange={setValue}    
-                            // onInputValueChange={setValue}
+                            onValueChange={setValue}
                             {...register("service_skills")}
                         >
                             <ComboboxChips>
                                 <ComboboxValue>
-                                    {value.map((item)=>(
+                                    {value.map((item) => (
                                         <ComboboxChip key={item}>{item}</ComboboxChip>
                                     ))}
                                 </ComboboxValue>
-                                <ComboboxChipsInput placeholder="add skills"/>
+                                <ComboboxChipsInput placeholder="add skills" />
                             </ComboboxChips>
-                            
+
                             <ComboboxContent>
                                 <ComboboxEmpty>No items found </ComboboxEmpty>
                                 <ComboboxList>
-                                    {(item)=>(
+                                    {(item) => (
                                         <ComboboxItem key={item} value={item}>
                                             {item}
                                         </ComboboxItem>
@@ -180,7 +205,7 @@ const ServiceForm = function({mode, open, setOpen, service}){
                         </Combobox>
                     </Field>
 
-                    <Field> <Button className={`${mode==='create' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} capitalize`} disabled={!formState.isValid}>{mode==="create" ? "Create my service" : "Update my service"}</Button></Field>                    
+                    <Field> <Button className={`${mode === 'create' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} capitalize`} disabled={!formState.isValid}>{mode === "create" ? "Create my service" : "Update my service"}</Button></Field>
                 </form>
             </DialogContent>
         </Dialog>

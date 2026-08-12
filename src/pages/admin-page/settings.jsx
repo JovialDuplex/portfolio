@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsTrigger, TabsList } from "@/components/ui/tabs";
 import useUserStore from "@/store/userStore";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ArrowLeft, Plus, X } from "lucide-react";
+import { ArrowLeft, Pencil, Plus, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { FaCloudArrowUp, FaUser } from "react-icons/fa6";
 import * as yup from "yup";
@@ -18,6 +18,7 @@ import axios from "axios";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import useSkills from "@/hooks/skills";
 
 
 // ─── Composant : Changement de mot de passe en 2 étapes ───────────────────────
@@ -176,7 +177,8 @@ const ChangePasswordSteps = function ({ open, setOpen }) {
 
 // ─── Page principale Settings ─────────────────────────────────────────────────
 export default function AdminSettingsPage() {
-    const { user, token, updateUser} = useUserStore();
+    const { user, token, updateUser } = useUserStore();
+    const { getSkills, createSkill, updateSkill, deleteSkill } = useSkills();
 
     // ── Schéma de validation (user_picture optionnel : validé seulement si un fichier est choisi) ──
     const personnalInfoValidation = yup.object().shape({
@@ -209,9 +211,6 @@ export default function AdminSettingsPage() {
         setValue,
     } = useForm({ mode: "onChange", resolver: yupResolver(personnalInfoValidation) });
 
-    // ── Bouton Save : visible uniquement si formulaire valide ET au moins un champ modifié ──
-    const canSave = formState.isValid && formState.isDirty;
-
     // ── Collecte des champs modifiés → FormData (prêt pour votre appel API) ──
     const updateUserData = async function (data) {
         const formData = new FormData();
@@ -231,21 +230,18 @@ export default function AdminSettingsPage() {
             console.log(`  ${key}:`, value);
         }
 
-        // TODO: branchez votre appel API ici, ex :
-        // const token = useUserStore.getState().token;
         try {
             const response = await axios.put(`${import.meta.env.VITE_URL_BACKEND}/admin/myself/update`, formData, {
                 headers: { "Content-Type": "multipart/form-data", token: token }
             });
-            const data = await response.data;
+            const resData = await response.data;
 
-            updateUser(data.user);
-            toast("Les informations de l'utilisateur ont bien ete modifiees ");
-        } catch(error) {
+            updateUser(resData.user);
+            toast("Les informations de l'utilisateur ont bien été modifiées");
+        } catch (error) {
             console.log("une erreur est survenue : ", error);
+            toast.error("Erreur lors de la mise à jour des informations");
         }
-
-            
     };
 
     // ── Upload d'image avec prévisualisation en temps réel ──
@@ -280,25 +276,105 @@ export default function AdminSettingsPage() {
         };
     }, [previewUrl]);
 
-    // ── Skills ──
-    const [skills, setSkills] = useState([
-        { id: 0, name: "php" }, { id: 1, name: "python" }, { id: 2, name: "javascript" },
-        { id: 3, name: "html" }, { id: 4, name: "css" }, { id: 5, name: "typescript" },
-        { id: 6, name: "node js" },
-    ]);
+    // ── Skills Management ──
+    const [skills, setSkills] = useState([]);
+    const [originalSkills, setOriginalSkills] = useState([]);
+    const [isSkillsDirty, setIsSkillsDirty] = useState(false);
     const [skillValue, setSkillValue] = useState("");
+
+    // State pour la modale d'édition d'une compétence
+    const [openEditSkillDialog, setOpenEditSkillDialog] = useState(false);
+    const [editingSkill, setEditingSkill] = useState(null);
+    const [editSkillName, setEditSkillName] = useState("");
+
+    const loadSkills = async () => {
+        try {
+            const data = await getSkills();
+            setSkills(data || []);
+            console.log(skills);
+            setOriginalSkills(data || []);
+            setIsSkillsDirty(false);
+        } catch (error) {
+            console.error("Error loading skills:", error);
+        }
+    };
 
     const addNewSkill = function () {
         if (skillValue.trim() !== "") {
-            setSkills(prev => [...prev, { id: prev.length, name: skillValue.trim() }]);
+            const newSkillName = skillValue.trim();
+            setSkills(prev => [...prev, { skill_name: newSkillName, isNew: true }]);
             setSkillValue("");
+            setIsSkillsDirty(true);
         }
     };
-    const deleteSkill = (idSkill) => {
-        setSkills(prev => prev.filter(skill => skill.id !== idSkill));
+
+    const handleDeleteSkill = (indexToDelete) => {
+        setSkills(prev => prev.filter((_, idx) => idx !== indexToDelete));
+        setIsSkillsDirty(true);
     };
 
-    // ── Initialisation du formulaire avec les données utilisateur ──
+    const handleOpenEditSkill = (skill, index) => {
+        setEditingSkill({ ...skill, index });
+        setEditSkillName(skill.skill_name || skill.name || "");
+        setOpenEditSkillDialog(true);
+    };
+
+    const handleSaveEditSkill = () => {
+        if (!editingSkill || !editSkillName.trim()) return;
+        const updated = [...skills];
+        updated[editingSkill.index] = {
+            ...updated[editingSkill.index],
+            skill_name: editSkillName.trim(),
+        };
+        setSkills(updated);
+        setIsSkillsDirty(true);
+        setOpenEditSkillDialog(false);
+        setEditingSkill(null);
+    };
+
+    const saveSkillsToDatabase = async () => {
+        try {
+            // 1. Supprimer en BDD les skills absents de la liste actuelle
+            const currentIds = new Set(skills.filter(s => s._id).map(s => s._id));
+            const deletedSkills = originalSkills.filter(s => s._id && !currentIds.has(s._id));
+
+            for (const item of deletedSkills) {
+                await deleteSkill(item._id);
+            }
+
+            // 2. Créer ou mettre à jour les skills
+            for (const item of skills) {
+                if (!item._id || item.isNew) {
+                    await createSkill({ skill_name: item.skill_name });
+                } else {
+                    const original = originalSkills.find(s => s._id === item._id);
+                    if (original && (original.skill_name || original.name) !== item.skill_name) {
+                        await updateSkill(item._id, { skill_name: item.skill_name });
+                    }
+                }
+            }
+
+            toast("Les compétences ont bien été enregistrées en base de données");
+            await loadSkills();
+        } catch (error) {
+            console.error("Error saving skills:", error);
+            toast.error("Erreur lors de l'enregistrement des compétences");
+        }
+    };
+
+    // ── Bouton Save : visible si formulaire valide ET au moins un champ dirty, OU si les skills ont changé ──
+    const canSave = (formState.isValid && formState.isDirty) || isSkillsDirty;
+
+    const handleMainSave = async () => {
+        if (formState.isDirty && formState.isValid) {
+            await handleSubmit(updateUserData)();
+        }
+        if (isSkillsDirty) {
+            await saveSkillsToDatabase();
+        }
+    };
+
+    // ── Initialisation du formulaire avec les données utilisateur & chargement des skills ──
     useEffect(() => {
         reset({
             user_name: user.user_name,
@@ -308,22 +384,49 @@ export default function AdminSettingsPage() {
             user_jobName: user.user_jobName,
             user_account_name: user.user_account_name,
         });
+        loadSkills();
     }, []);
 
     const [openPasswordStep, setOpenPasswordStep] = useState(false);
     const navigate = useNavigate();
     return (
         <div className={"text-(--text-primary) flex flex-col"}>
+            {/* Dialog de modification d'une compétence */}
+            <Dialog open={openEditSkillDialog} onOpenChange={setOpenEditSkillDialog}>
+                <DialogContent className={"text-(--text-primary)"}>
+                    <DialogHeader>
+                        <DialogTitle>Edit Skill</DialogTitle>
+                        <DialogDescription>Modify the name of this skill</DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={(e) => { e.preventDefault(); handleSaveEditSkill(); }} className="flex flex-col gap-4">
+                        <Field>
+                            <FieldLabel htmlFor="edit_skill_name">Skill Name</FieldLabel>
+                            <Input
+                                id="edit_skill_name"
+                                value={editSkillName}
+                                onChange={(e) => setEditSkillName(e.target.value)}
+                                className="border-(--border-input)"
+                                autoFocus
+                            />
+                        </Field>
+                        <Field orientation="horizontal" className="justify-end gap-2">
+                            <Button variant="outline" type="button" onClick={() => setOpenEditSkillDialog(false)}>Cancel</Button>
+                            <Button variant="accent" type="button" onClick={handleSaveEditSkill} disabled={!editSkillName.trim()}>Update Skill</Button>
+                        </Field>
+                    </form>
+                </DialogContent>
+            </Dialog>
+
             <header className={"setting-header *:my-2"}>
-                <Button className={"bg-(--bg-button) text-(--text-primary)"} onClick={()=> navigate("/admin/dashboard/home")}> <ArrowLeft /> <span className="font-semibold">Back to dashboard</span> </Button>
+                <Button className={"bg-(--bg-button) text-(--text-primary)"} onClick={() => navigate("/admin/dashboard/home")}> <ArrowLeft /> <span className="font-semibold">Back to dashboard</span> </Button>
                 <div className="flex justify-between items-center">
                     <h1 className="text-2xl capitalize font-bold"> Settings </h1>
-                    {/* Bouton Save : rendu uniquement si formulaire valide ET au moins un champ dirty */}
+                    {/* Bouton Save : rendu uniquement si formulaire ou compétences modifiées */}
                     {canSave && (
                         <Button
                             variant="accent"
                             className={`w-20 font-semibold`}
-                            onClick={handleSubmit(updateUserData)}
+                            onClick={handleMainSave}
                         >
                             Save
                         </Button>
@@ -450,11 +553,14 @@ export default function AdminSettingsPage() {
                                     placeholder={"enter your skill name here"}
                                 />
                             </div>
-                            <div className={"overflow-y-auto h-40 w-full *:uppercase grid grid-cols-3 md:grid-cols-4 gap-2 rounded-[5px] p-3"}>
+                            <div className={"overflow-y-auto h-40 w-full *:uppercase grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 rounded-[5px] p-3 border border-(--border-card)"}>
                                 {skills.map((skill, index) => (
-                                    <Badge key={index} className={"text-(--text-primary) border-(--border-input) bg-transparent font-semibold p-3"}>
-                                        {skill.name}
-                                        <Button size="icon-xs" variant="ghost" type={"button"} onClick={() => deleteSkill(skill.id)}><X /></Button>
+                                    <Badge key={skill._id || index} className={"text-(--text-primary) border-(--border-input) bg-transparent font-semibold p-2.5 justify-between items-center flex gap-1"}>
+                                        <span className="truncate">{skill.skill_name || skill.name}</span>
+                                        <div className="flex items-center gap-0.5 shrink-0">
+                                            <Button size={"icon-xs"} variant={"ghost"} type={"button"} onClick={() => handleOpenEditSkill(skill, index)}> <Pencil size={14} /> </Button>
+                                            <Button size="icon-xs" variant="ghost" type={"button"} onClick={() => handleDeleteSkill(index)}><X size={14} /></Button>
+                                        </div>
                                     </Badge>
                                 ))}
                             </div>
