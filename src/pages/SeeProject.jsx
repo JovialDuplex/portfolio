@@ -55,10 +55,10 @@ const SeeProject = function(){
                     <div className="header flex flex-col gap-5 justify-start ">
                         <img src={`${import.meta.env.VITE_URL_BACKEND}/${project.project_cover_image}`} alt={"cover_image"} className="w-70 h-auto"/>
                         <div className="project-title flex items-center gap-20">
-                            <span className="text-xl font-semibold ">{myproject[0].project_title}</span>
+                            <span className="text-xl font-semibold ">{project.project_title}</span>
                             <div className="flex gap-2 items-center"> 
-                                {project.project_github_url && (<a href={project.project_github_url}><FaGlobe className="text-blue-500 size-6"/></a> )}
-                                {project.project_url && (<a href={project.project_url}><SiGithub className="text-(--text-primary)"/></a>)}
+                                {project.project_github_url && (<a href={project.project_github_url} target="_blank" rel="noreferrer"><SiGithub className="text-(--text-primary) size-6"/></a>)}
+                                {project.project_url && (<a href={project.project_url} target="_blank" rel="noreferrer"><FaGlobe className="text-blue-500 size-6"/></a>)}
                             </div>
                         </div>
                         

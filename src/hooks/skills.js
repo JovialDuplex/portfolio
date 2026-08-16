@@ -17,7 +17,8 @@ const useSkills = function () {
 
     const createSkill = async function (data) {
         try {
-            await axios.post(`${import.meta.env.VITE_URL_BACKEND}/admin/skills/create`, data, { headers: { token: token } });
+            const response = await axios.post(`${import.meta.env.VITE_URL_BACKEND}/admin/skills/create`, data, { headers: { token: token } });
+            return response.data?.skill;
         } catch (error) {
             console.log(error);
             throw error;
@@ -26,7 +27,8 @@ const useSkills = function () {
 
     const updateSkill = async function (id, data) {
         try {
-            await axios.put(`${import.meta.env.VITE_URL_BACKEND}/admin/skills/update?id=${id}`, data, { headers: { token: token } });
+            const response = await axios.put(`${import.meta.env.VITE_URL_BACKEND}/admin/skills/update?id=${id}`, data, { headers: { token: token } });
+            return response.data?.skill;
         } catch (error) {
             console.log(error);
             throw error;
@@ -35,7 +37,8 @@ const useSkills = function () {
 
     const deleteSkill = async function (id) {
         try {
-            await axios.delete(`${import.meta.env.VITE_URL_BACKEND}/admin/skills/delete?id=${id}`, { headers: { token: token } });
+            const response = await axios.delete(`${import.meta.env.VITE_URL_BACKEND}/admin/skills/delete?id=${id}`, { headers: { token: token } });
+            return response.data;
         } catch (error) {
             console.log(error);
             throw error;

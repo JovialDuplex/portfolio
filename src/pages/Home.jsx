@@ -1,9 +1,9 @@
 import {
-    FaCode, 
-    FaTachometerAlt, 
-    FaServer, 
-    FaPencilRuler,
-}from "react-icons/fa";
+  FaCode,
+  FaTachometerAlt,
+  FaServer,
+  FaPencilRuler,
+} from "react-icons/fa";
 
 import Hero from "@/components/hero";
 import { loremIpsum } from "lorem-ipsum";
@@ -11,69 +11,69 @@ import useUserStore from "@/store/userStore";
 import ServiceCard from "@/components/service-card";
 import { SiJavascript, SiJavascriptHex, SiNextdotjs } from "@icons-pack/react-simple-icons";
 
-export default function HomePage(){
-    
-const services = [
-  {
-    icon: <FaCode size={28} />,
-    title: "Développement Web",
-    description:
-      "Je conçois et développe des applications web modernes, performantes et évolutives avec des technologies de pointe.",
-    tags: ["React", "Next.js", "Tailwind"],
-  },
-  {
-    icon: <FaTachometerAlt size={28} />,
-    title: "Performance & SEO",
-    description:
-      "Optimisation des performances et du référencement pour que vos applications soient rapides et visibles.",
-    tags: ["SEO", "Lighthouse", "Speed"],
-  },
-  {
-    icon: <FaServer size={28} />,
-    title: "Applications sur mesure",
-    description:
-      "Développement d'applications fullstack adaptées à vos besoins métiers spécifiques.",
-    tags: ["API", "DB", "Fullstack"],
-  },
-  {
-    icon: <FaPencilRuler size={28} />,
-    title: "UI/UX Design",
-    description:
-      "Conception d'interfaces utilisateur intuitives et esthétiques pour une expérience optimale.",
-    tags: ["Figma", "UI/UX", "Prototyping"],
-  },
-];
+export default function HomePage() {
 
-    const {user} = useUserStore();
-    console.log(user);
+  const services = [
+    {
+      icon: <FaCode size={28} />,
+      title: "Développement Web",
+      description:
+        "Je conçois et développe des applications web modernes, performantes et évolutives avec des technologies de pointe.",
+      tags: ["React", "Next.js", "Tailwind"],
+    },
+    {
+      icon: <FaTachometerAlt size={28} />,
+      title: "Performance & SEO",
+      description:
+        "Optimisation des performances et du référencement pour que vos applications soient rapides et visibles.",
+      tags: ["SEO", "Lighthouse", "Speed"],
+    },
+    {
+      icon: <FaServer size={28} />,
+      title: "Applications sur mesure",
+      description:
+        "Développement d'applications fullstack adaptées à vos besoins métiers spécifiques.",
+      tags: ["API", "DB", "Fullstack"],
+    },
+    {
+      icon: <FaPencilRuler size={28} />,
+      title: "UI/UX Design",
+      description:
+        "Conception d'interfaces utilisateur intuitives et esthétiques pour une expérience optimale.",
+      tags: ["Figma", "UI/UX", "Prototyping"],
+    },
+  ];
 
-    return (
-        <div className="home-page"> 
-            {/* --------section hero----------- */}
-            <Hero 
-                name={user.user_name} 
-                secondName={user.user_secondName} 
-                profilePicture={import.meta.env.VITE_URL_BACKEND + "/" + user.user_picture} 
-                description={user.user_desc}
-            />
+  const { user } = useUserStore();
+  console.log(user);
 
-            {/*------- section service ------- */}
-            <section className="my-0 mx-auto pt-12 pb-8 px-20">
-                <div className="mb-12 text-center">
-                    <p className="font-semibold text-(--text-accent) text-[0.85rem] uppercase mb-2">
-                        That I do 
-                    </p>
-                    <h2 className={"font-extrabold text-(--text-primary) "} style={{fontSize: "clamp(1.6rem, 4vw, 2.2rem)"}}>
-                        My services 
-                    </h2>
-                </div>
+  return (
+    <div className="home-page">
+      {/* --------section hero----------- */}
+      <Hero
+        name={user?.user_name ?? "jovial"}
+        secondName={user?.user_secondName ?? ""}
+        profilePicture={user?.user_picture ? `${import.meta.env.VITE_URL_BACKEND}/${user.user_picture}` : ""}
+        description={user?.user_desc ?? ""}
+      />
 
-                {/* <div className="grid grid-cols-4 gap-6">
+      {/*------- section service ------- */}
+      <section className="my-0 mx-auto pt-12 pb-8 px-20">
+        <div className="mb-12 text-center">
+          <p className="font-semibold text-(--text-accent) text-[0.85rem] uppercase mb-2">
+            That I do
+          </p>
+          <h2 className={"font-extrabold text-(--text-primary) "} style={{ fontSize: "clamp(1.6rem, 4vw, 2.2rem)" }}>
+            My services
+          </h2>
+        </div>
+
+        {/* <div className="grid grid-cols-4 gap-6">
                     {services.map((service, index)=> (
                         <ServiceCard service={service} key={index}/>
                     ))}
                 </div> */}
-            </section>
-        </div>
-    )
+      </section>
+    </div>
+  )
 }

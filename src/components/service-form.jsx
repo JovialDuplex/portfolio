@@ -5,7 +5,6 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import * as SimpleIcon from "@icons-pack/react-simple-icons";
 import CustomTextarea from "./custom-textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import {
@@ -15,7 +14,6 @@ import {
     ComboboxEmpty,
     ComboboxItem,
     ComboboxList,
-    useComboboxAnchor,
     ComboboxValue,
     ComboboxContent,
     ComboboxChipsInput
@@ -23,44 +21,17 @@ import {
 import React, { useState, useEffect } from "react";
 import useCategories from "@/hooks/categories";
 import { Icon } from "@/components/ui/icon-picker";
-
-const MultipleSelect = function ({ items_list }) {
-    const anchor = useComboboxAnchor();
-    const [value, setValue] = useState([]);
-
-    return (
-        <Combobox
-            multiple={true}
-            items={items_list}
-            defaultValue={[items_list[0]]}
-            value={value}
-            onValueChange={setValue}
-        >
-            <ComboboxChips>
-                <ComboboxValue>
-                    {value.map((item) => (
-                        <ComboboxChip key={item}>{item}</ComboboxChip>
-                    ))}
-                </ComboboxValue>
-                <ComboboxChipsInput placeholder="add skills" />
-            </ComboboxChips>
-
-            <ComboboxContent>
-                <ComboboxEmpty>No items found </ComboboxEmpty>
-                <ComboboxList>
-                    {(item) => (
-                        <ComboboxItem key={item} value={item}>
-                            {item}
-                        </ComboboxItem>
-                    )}
-                </ComboboxList>
-            </ComboboxContent>
-        </Combobox>
-    )
-}
+import useSkills from "@/hooks/skills";
+import useService from "@/hooks/services";
+import { toast } from "sonner";
+import useActivitiesStore from "@/store/activtiesStore";
 
 const ServiceForm = function ({ mode, open, setOpen, service }) {
     const { getCategories } = useCategories();
+    const { getSkills } = useSkills();
+    const { createService, updateService } = useService();
+    const { makeActivity } = useActivitiesStore();
+
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
@@ -77,7 +48,7 @@ const ServiceForm = function ({ mode, open, setOpen, service }) {
         service_name: yup.string().required("The Name of a service is required !"),
         service_desc: yup.string().required("The description of your service is required "),
         service_category: yup.string().required("The category of a service is required"),
-        // service_skills: yup.array().of(yup.string()).min(1, "Select at least one skills inside the list")
+        service_skills: yup.array().of(yup.string()).min(1, "Select at least one skills inside the list")
     });
 
     const {
@@ -95,27 +66,31 @@ const ServiceForm = function ({ mode, open, setOpen, service }) {
         }
     });
 
-    const icons = Object.entries(SimpleIcon).map(([name, Icon]) => ({
-        name,
-        Icon
-    }));
+    const [skills, setSkills] = useState([]);
+    useEffect(() => {
+        getSkills()
+            .then((data) => {
+                setSkills(data || []);
+            })
+            .catch((error) => {
+                console.error("Error fetching skills:", error);
+                throw error;
+            });
+    }, []);
 
-    const skills = [
-        { name: "React", Component: <SimpleIcon.SiReact color={SimpleIcon.SiReactHex} /> },
-        { name: "NextJs", Component: <SimpleIcon.SiNextdotjs color={SimpleIcon.SiNextdotjsHex} /> },
-        { name: "Python", Component: <SimpleIcon.SiPython color={SimpleIcon.SiPythonHex} /> },
-        { name: "NodeJs", Component: <SimpleIcon.SiNodedotjs color={SimpleIcon.SiNodedotjsHex} /> },
-        { name: "Html5", Component: <SimpleIcon.SiHtml5 color={SimpleIcon.SiHtml5Hex} /> },
-    ];
-    const skills2 = [
-        "yo",
-        "bonjour",
-        "bonsoir",
-        "comment allez vous",
-        "hello",
-        "halo"
-    ];
-    const [value, setValue] = useState([]);
+    const submitForm = async function (data) {
+        try {
+            await createService(data);
+            console.log(data);
+            toast("A service has been created successfully ");
+            // makeActivity("PackagePlus", "A Service has been created successfully !", new Date().toUTCString(), "service");
+            setOpen(false);
+
+        } catch (error) {
+            console.log(error.message);
+            throw error;
+        }
+    };
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -125,7 +100,7 @@ const ServiceForm = function ({ mode, open, setOpen, service }) {
                     <DialogDescription> Fill this following form for {mode === "update" ? "update" : "add"} a service in the list </DialogDescription>
                 </DialogHeader>
 
-                <form className="flex-1 flex flex-col gap-5">
+                <form className="flex-1 flex flex-col gap-5" onSubmit={handleSubmit(submitForm)}>
                     <Field>
                         <FieldLabel htmlFor={"service_name"} className={"capitalize"}> Service Name <span className="text-red-600">*</span></FieldLabel>
                         {formState.errors.service_name && <FieldError> {formState.errors.service_name.message}</FieldError>}
@@ -158,7 +133,7 @@ const ServiceForm = function ({ mode, open, setOpen, service }) {
                                     </SelectTrigger>
                                     <SelectContent position="popper">
                                         {categories.map((item) => (
-                                            <SelectItem key={item._id} value={item.category_name}>
+                                            <SelectItem key={item._id} value={item._id}>
                                                 <span className="flex items-center gap-2 capitalize">
                                                     <Icon name={item.category_icon} />
                                                     <span>{item.category_name}</span>
@@ -174,38 +149,52 @@ const ServiceForm = function ({ mode, open, setOpen, service }) {
                     <Field>
                         <FieldLabel htmlFor={"service_skills"} className={"capitalize"}> Service Skills <span className="text-red-600">*</span></FieldLabel>
                         <FieldDescription> Select a list of skills that you want to attribute at this service </FieldDescription>
+                        {formState.errors.service_skills && (
+                            <FieldError>{formState.errors.service_skills.message}</FieldError>
+                        )}
+                        <Controller
+                            name={"service_skills"}
+                            control={control}
+                            render={({ field }) => (
+                                <Combobox
+                                    multiple={true}
+                                    items={skills}
+                                    getItemValue={(item) => (typeof item === "object" && item ? item._id : item)}
+                                    getItemLabel={(item) => (typeof item === "object" && item ? item.skill_name : item)}
+                                    value={field.value || []}
+                                    onValueChange={field.onChange}
+                                >
+                                    <ComboboxChips>
+                                        <ComboboxValue>
+                                            {(field.value || []).map((id) => {
+                                                const skillObj = skills.find((s) => s._id === id);
+                                                const label = skillObj ? skillObj.skill_name : id;
+                                                return (
+                                                    <ComboboxChip key={id} value={id}>
+                                                        {label}
+                                                    </ComboboxChip>
+                                                );
+                                            })}
+                                        </ComboboxValue>
+                                        <ComboboxChipsInput placeholder="Add skills..." />
+                                    </ComboboxChips>
 
-                        <Combobox
-                            multiple={true}
-                            items={skills2}
-                            defaultValue={[skills2[0]]}
-                            value={value}
-                            onValueChange={setValue}
-                            {...register("service_skills")}
-                        >
-                            <ComboboxChips>
-                                <ComboboxValue>
-                                    {value.map((item) => (
-                                        <ComboboxChip key={item}>{item}</ComboboxChip>
-                                    ))}
-                                </ComboboxValue>
-                                <ComboboxChipsInput placeholder="add skills" />
-                            </ComboboxChips>
-
-                            <ComboboxContent>
-                                <ComboboxEmpty>No items found </ComboboxEmpty>
-                                <ComboboxList>
-                                    {(item) => (
-                                        <ComboboxItem key={item} value={item}>
-                                            {item}
-                                        </ComboboxItem>
-                                    )}
-                                </ComboboxList>
-                            </ComboboxContent>
-                        </Combobox>
+                                    <ComboboxContent>
+                                        <ComboboxEmpty>No skills found</ComboboxEmpty>
+                                        <ComboboxList>
+                                            {(item) => (
+                                                <ComboboxItem key={item._id || item} value={item._id || item}>
+                                                    {item.skill_name || item}
+                                                </ComboboxItem>
+                                            )}
+                                        </ComboboxList>
+                                    </ComboboxContent>
+                                </Combobox>
+                            )}
+                        />
                     </Field>
 
-                    <Field> <Button className={`${mode === 'create' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} capitalize`} disabled={!formState.isValid}>{mode === "create" ? "Create my service" : "Update my service"}</Button></Field>
+                    <Field> <Button className={`${mode === 'create' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} capitalize`} disabled={!formState.isValid} type={"submit"}> {mode === "create" ? "Create my service" : "Update my service"}</Button></Field>
                 </form>
             </DialogContent>
         </Dialog>

@@ -6,11 +6,11 @@ import { useEffect, useState } from "react";
 import useService from "@/hooks/services";
 import ServiceCard from "@/components/service-card";
 import ServiceForm from "@/components/service-form";
-import { IconPicker } from "../../index";
-import * as SimpleIcon from "@icons-pack/react-simple-icons";
+import useActivitiesStore from "@/store/activtiesStore";
 
 export default function AdminServicesPage() {
     const { getServices } = useService();
+    const { activityList } = useActivitiesStore();
     const [services, setServices] = useState([]);
 
     const [openServiceForm, setOpenServiceForm] = useState(false);
@@ -22,10 +22,8 @@ export default function AdminServicesPage() {
         };
 
         loadServices();
-    }, []);
+    }, [activityList]);
 
-    const [iconId, setIconId] = useState(null);
-    const [IconComponent, setIconComponent] = useState(null);
 
     // useEffect(()=>{
     //     console.log(IconComponent);
@@ -52,10 +50,15 @@ export default function AdminServicesPage() {
 
             </header>
 
-            <ServiceForm open={openServiceForm} mode={"create"} setOpen={setOpenServiceForm} />
+            <ServiceForm open={openServiceForm} mode={"update"} setOpen={setOpenServiceForm} />
             {/* Section principale de la page des service */}
             <section className="main-section min-h-0 px-3 py-7 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-
+                {
+                    services.length === 0 ? <span>Aucun service a afficher</span> :
+                        services.map((service, index) => (
+                            <ServiceCard service={service} />
+                        ))
+                }
             </section>
         </div>
     )
