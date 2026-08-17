@@ -58,12 +58,12 @@ export default function NavBar(){
                 </div>
             </nav>
 
-            {/* barre de navigation pour android */}
+            {/* barre de navigation pour android/mobile */}
             {menuOpen && (
-                <ul className="fixed flex text-(--text-primary) justify-evenly items-center gap-3 top-16 left-0 right-0 bg-(--bg-navbar) py-4 px-6 z-40 border-b border-(--border-navbar)">
+                <ul className="fixed flex flex-col text-(--text-primary) justify-center items-center gap-2 top-16 left-0 right-0 bg-(--bg-navbar) py-4 px-6 z-50 border-b border-(--border-navbar) shadow-lg lg:hidden" onClick={() => setMenuOpen(false)}>
                     {navLinks.map((value, index) => (
-                        <li key={index} className="py-2.5 px-0"> 
-                            <NavLink className={({isActive}) => `bg-none transition-colors hover:text-(--text-accent) duration-200 cursor-pointer pb-0.5 ${isActive ? 'font-bold text-(--text-accent) border-b-2 border-(--text-accent)' : 'font-semibold border-b-2 border-transparent'}`} to={value.href}> {value.label} </NavLink>
+                        <li key={index} className="py-2 px-0 w-full text-center"> 
+                            <NavLink className={({isActive}) => `block w-full py-2 transition-colors hover:text-(--text-accent) duration-200 cursor-pointer ${isActive ? 'font-bold text-(--text-accent)' : 'font-semibold'}`} to={value.href}> {value.label} </NavLink>
                         </li>
                     ))}
                 </ul>

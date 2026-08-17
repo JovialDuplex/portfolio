@@ -55,14 +55,15 @@ const ServiceForm = function ({ mode, open, setOpen, service }) {
         register,
         handleSubmit,
         control,
+        reset,
         formState
     } = useForm({
         resolver: yupResolver(serviceSchema),
         defaultValues: {
             service_name: service?.service_name || "",
             service_desc: service?.service_desc || "",
-            service_category: service?.service_category || "",
-            service_skills: service?.service_skills || [],
+            service_category: typeof service?.service_category === "object" ? service.service_category?._id : service?.service_category || "",
+            service_skills: Array.isArray(service?.service_skills) ? service.service_skills.map((s) => (typeof s === "object" ? s?._id : s)) : [],
         }
     });
 
@@ -74,27 +75,53 @@ const ServiceForm = function ({ mode, open, setOpen, service }) {
             })
             .catch((error) => {
                 console.error("Error fetching skills:", error);
-                throw error;
             });
     }, []);
 
+    useEffect(() => {
+        if (mode === "update" && service) {
+            const categoryId = typeof service.service_category === "object" ? service.service_category?._id : service.service_category;
+            const skillIds = Array.isArray(service.service_skills)
+                ? service.service_skills.map((s) => (typeof s === "object" ? s?._id : s))
+                : [];
+            reset({
+                service_name: service.service_name || "",
+                service_desc: service.service_desc || "",
+                service_category: categoryId || "",
+                service_skills: skillIds,
+            });
+        } else {
+            reset({
+                service_name: "",
+                service_desc: "",
+                service_category: "",
+                service_skills: [],
+            });
+        }
+    }, [mode, service, open, reset]);
+
     const submitForm = async function (data) {
         try {
-            await createService(data);
-            console.log(data);
-            toast("A service has been created successfully ");
-            // makeActivity("PackagePlus", "A Service has been created successfully !", new Date().toUTCString(), "service");
+            if (mode === "update" && service?._id) {
+                await updateService(service._id, data);
+                toast.success("A service has been updated successfully!");
+                makeActivity("PackageEdit", "A service has been updated successfully !", new Date().toUTCString(), "service");
+            } else {
+                await createService(data);
+                toast.success("A service has been created successfully!");
+                makeActivity("PackagePlus", "A Service has been created successfully !", new Date().toUTCString(), "service");
+            }
             setOpen(false);
-
         } catch (error) {
             console.log(error.message);
+            toast.error("An error occurred while saving the service");
             throw error;
         }
     };
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent className={"flex flex-col [background:var(--bg-page)] text-(--text-primary) h-11/12 overflow-y-auto w-8/12! max-w-200!"}>
+            <DialogContent className={"flex flex-col [background:var(--bg-page)] text-(--text-primary) max-h-[90vh] overflow-y-auto w-[92vw] sm:w-[85vw] md:w-8/12 max-w-2xl"}>
                 <DialogHeader className={"shrink-0"}>
                     <DialogTitle className={"text-xl capitalize"}> {mode === "update" ? "Update a Service" : "Add a New Service"} </DialogTitle>
                     <DialogDescription> Fill this following form for {mode === "update" ? "update" : "add"} a service in the list </DialogDescription>
@@ -194,7 +221,12 @@ const ServiceForm = function ({ mode, open, setOpen, service }) {
                         />
                     </Field>
 
-                    <Field> <Button className={`${mode === 'create' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} capitalize`} disabled={!formState.isValid} type={"submit"}> {mode === "create" ? "Create my service" : "Update my service"}</Button></Field>
+                    <Field orientation="horizontal" className={"grid grid-cols-2 gap-3"}>
+                        <Button className={`${mode === 'create' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} capitalize cursor-pointer`} disabled={!formState.isValid} type={"submit"}>
+                            {mode === "create" ? "Create my service" : "Update my service"}
+                        </Button>
+                        <Button type={"button"} variant="destructive" className={"w-full cursor-pointer"} onClick={() => setOpen(false)}> Cancel </Button>
+                    </Field>
                 </form>
             </DialogContent>
         </Dialog>

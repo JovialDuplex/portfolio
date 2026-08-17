@@ -49,24 +49,24 @@ const SeeProject = function(){
     }
 
     return (
-        <div className="flex gap-3 text-(--text-primary) py-2">
-            <div className="project-infos border-r-(--border-card) border-r-2 flex-1 basis-0 overflow-hidden flex flex-col">
-                <div className="flex-1 basis-0 overflow-scroll min-h-0 ">
-                    <div className="header flex flex-col gap-5 justify-start ">
-                        <img src={`${import.meta.env.VITE_URL_BACKEND}/${project.project_cover_image}`} alt={"cover_image"} className="w-70 h-auto"/>
-                        <div className="project-title flex items-center gap-20">
-                            <span className="text-xl font-semibold ">{project.project_title}</span>
-                            <div className="flex gap-2 items-center"> 
-                                {project.project_github_url && (<a href={project.project_github_url} target="_blank" rel="noreferrer"><SiGithub className="text-(--text-primary) size-6"/></a>)}
-                                {project.project_url && (<a href={project.project_url} target="_blank" rel="noreferrer"><FaGlobe className="text-blue-500 size-6"/></a>)}
+        <div className="flex flex-col lg:flex-row gap-6 text-(--text-primary) py-2 h-full min-h-0">
+            <div className="project-infos lg:border-r-2 border-r-(--border-card) pr-0 lg:pr-6 flex-1 basis-0 overflow-hidden flex flex-col">
+                <div className="flex-1 basis-0 overflow-y-auto min-h-0 pr-2">
+                    <div className="header flex flex-col gap-5 justify-start">
+                        <img src={`${import.meta.env.VITE_URL_BACKEND}/${project.project_cover_image}`} alt={"cover_image"} className="w-full max-w-lg h-auto rounded-lg shadow-md"/>
+                        <div className="project-title flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <span className="text-2xl font-bold">{project.project_title}</span>
+                            <div className="flex gap-3 items-center"> 
+                                {project.project_github_url && (<a href={project.project_github_url} target="_blank" rel="noreferrer" className="hover:opacity-80"><SiGithub className="text-(--text-primary) size-6"/></a>)}
+                                {project.project_url && (<a href={project.project_url} target="_blank" rel="noreferrer" className="hover:opacity-80"><FaGlobe className="text-blue-500 size-6"/></a>)}
                             </div>
                         </div>
                         
-                        <div className="project-desc text-(--text-secondary)">
-                        {project.project_desc}
+                        <div className="project-desc text-(--text-secondary) text-lg leading-relaxed">
+                            {project.project_desc}
                         </div>
 
-                        <div className="project-content">
+                        <div className="project-content text-(--text-primary) leading-relaxed">
                             {project.project_content}
                         </div>
                     </div>
@@ -75,13 +75,13 @@ const SeeProject = function(){
                 
             </div>
 
-            <div className="other-projects w-3/12 lg:flex flex-col gap-3 hidden">
-                <InputGroup className={"shrink-0"}>
+            <div className="other-projects w-full lg:w-3/12 flex flex-col gap-3 border-t lg:border-t-0 pt-6 lg:pt-0 border-(--border-card)">
+                <InputGroup className={"shrink-0 w-full"}>
                     <InputGroupAddon> <Search /> </InputGroupAddon> 
-                    <InputGroupInput type="search" placeholder={"Search others project here ..."} />
+                    <InputGroupInput type="search" placeholder={"Search other projects..."} />
                 </InputGroup>
 
-                <div className="projects min-h-0 overflow-y-scroll basis-0 flex-1 flex flex-col gap-3">
+                <div className="projects max-h-96 lg:max-h-none overflow-y-auto basis-0 flex-1 flex flex-col gap-3 pr-1">
                     {projects.map((project, index)=>(
                         <HorizontalCard key={index}
                             id={project._id}

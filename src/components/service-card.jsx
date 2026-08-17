@@ -1,11 +1,12 @@
 
+import { Button } from "./ui/button";
 import { Icon } from "./ui/icon-picker";
 
-const ServiceCard = function ({ service }) {
-    
+const ServiceCard = function ({ service, isFocus, onFocus }) {
+
     return (
 
-        <div className="bg-(--bg-card) rounded-[16px] p-8 border border-(--border-card) cursor-default hover:-translate-1.25 hover:border-[rgba(59, 130, 246, 0.5)]" style={{ transition: "transform 0.25s, border-color 0.25s" }}>
+        <div onClick={onFocus} className="bg-(--bg-card) mx-5 sm:mx-0 max-h-70 rounded-[16px] p-8 border border-(--border-card) cursor-pointer">
             <div className="w-10 h-10 rounded-[14px] flex items-center justify-center text-(--text-accent) mb-5 border border-(--text-accent)">
                 {/* <si.SiC /> */}
                 <Icon name={service.service_category.category_icon} />
@@ -29,6 +30,7 @@ const ServiceCard = function ({ service }) {
                     </span>
                 ))}
             </div>
+            {isFocus && <Button className={"w-full mt-6"} variant="accent"> Request this service </Button>}
         </div>
 
     )

@@ -12,16 +12,18 @@ import {PhoneInput} from "react-international-phone";
 import "react-international-phone/style.css";
 import {PhoneNumberUtil} from "google-libphonenumber";
 import { FieldError } from "@/components/ui/field";
+import useUserStore from "@/store/userStore";
 
 export default function ContactPage(){
     const phoneUtil = PhoneNumberUtil.getInstance();
+    const {user} = useUserStore();
+    console.log(user);
 
     const informations = [
         {Icon: FaLocationDot, label: "Douala-Cameroon quatier bobongo petit paris", type: "location"},
-        {Icon: FaEnvelope, label: "takeuhduplex2006@gmail.com", type: "mail"},
-        {Icon: FaPhone, label: "(+237) 682 35 40 56", type: "phone"},
-        {Icon: FaWhatsapp, label: "(+237) 682 35 40 56", type: "whatsapp"},
-        {Icon: FaInstagram, label: "(+237) 682 35 40 56", type: "instagram"},
+        {Icon: FaEnvelope, label: user?.user_email ?? "takeuhduplex2006@gmail.com", type: "mail"},
+        {Icon: FaPhone, label: user?.user_contact_phone ?? "(+237) 682354056", type: "phone"},
+        {Icon: FaWhatsapp, label: user?.user_whatsapp_phone ?? "(+237) 682354056", type: "whatsapp"},
     ];
 
     const contactFormValidation = yup.object().shape({
@@ -47,23 +49,27 @@ export default function ContactPage(){
     } = useForm({mode: "onSubmit", resolver: yupResolver(contactFormValidation)});
 
     const submitForm = function(data){
-        console.log(data);
+        const message = `Hello my name is ${data.client_name}. \n that's my contact informations :\n Email -> ${data.client_email} \n Phone -> ${data.client_phone} \n and my request is : ${data.client_request}`
+        const whatsappUrl = `https://wa.me/${user?.user_whatsapp_phone.replace("+", "") ?? '237682354056'}?text=${encodeURIComponent(message)}`;
+
+        window.open(whatsappUrl, "_blank");
+
     }
 
     return (
-        <div className="contact-page text-(--text-primary) py-2 flex flex-col gap-5 justify-center items-center">
-            <h1 className="capitalize text-3xl"> Let's work together </h1>
-            <div className="contact-form-container grid md:grid-cols-2 md:grid-rows-1 grid-rows-2 gap-10 h-[80%]  w-full max-w-5xl">
+        <div className="contact-page text-(--text-primary) py-4 flex flex-col gap-6 justify-center items-center">
+            <h1 className="capitalize text-2xl sm:text-4xl font-extrabold text-center"> Let's work together </h1>
+            <div className="contact-form-container flex flex-col md:grid md:grid-cols-2 gap-8 w-full max-w-5xl">
 
-                <div className="side-container overflow-y-scroll [background:var(--bg-page)] flex flex-col py-10 px-5 gap-10 text-lg rounded-2xl" style={{border: "2px solid var(--text-secondary)"}}>
-                    <span className="text-4xl font-semibold border-b-4 border-b-(--text-secondary) self-center" style={{width: "max-content"}}>My Informations </span>
+                <div className="side-container [background:var(--bg-page)] flex flex-col py-8 px-6 gap-6 text-base sm:text-lg rounded-2xl border-2 border-(--text-secondary)">
+                    <span className="text-2xl sm:text-3xl font-semibold border-b-4 border-b-(--text-secondary) self-start pb-1">My Information</span>
                     {informations.map((value, index)=>(
-                        <div key={index} className="flex gap-3 items-center">
-                            <value.Icon /> <span>{value.label}</span>
+                        <div key={index} className="flex gap-3 items-center break-all">
+                            <value.Icon className="shrink-0 text-xl text-(--text-accent)"/> <span>{value.label}</span>
                         </div>
                     ))}                
                 </div>
-                <form className="form-container overflow-auto flex flex-col gap-6 justify-center p-2" onSubmit={handleSubmit(submitForm)}>
+                <form className="form-container flex flex-col gap-5 justify-center p-2" onSubmit={handleSubmit(submitForm)}>
                     {formState.errors.client_name && <FieldError>{formState.errors.client_name.message}</FieldError>}
                     <Input {...register("client_name")} type={"text"} name={"client_name"} placeholder={"Your name"} className={"border-(--border-input) h-10"}/>
                     
@@ -85,8 +91,8 @@ export default function ContactPage(){
                         )}
                     />
                     {formState.errors.client_request && <FieldError>{formState.errors.client_request.message}</FieldError>}
-                    <Textarea {...register("client_request")} name={"client_request"} placeholder={"what do you want me to do for you"} className={"h-64 border-(--border-input)"}/>
-                    <Button variant="accent" type={"submit"}> Send Message </Button>
+                    <Textarea {...register("client_request")} name={"client_request"} placeholder={"What do you want me to do for you?"} className={"h-44 border-(--border-input)"}/>
+                    <Button variant="accent" type={"submit"} className="cursor-pointer font-semibold py-3"> Send Message </Button>
                 </form>
             </div>
         </div>

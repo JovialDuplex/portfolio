@@ -24,7 +24,7 @@ const CategoriesItems = function({id, category_name, category_icon, onEdit}){
         try{
             await deleteCategory(id);
             toast("A category has been deleted successfully !");
-            makeActivity("FolderX", "A category has been deleted successfully !", new Date().toUTCString(), "project");
+            makeActivity("Tag", "A category has been deleted successfully !", new Date().toUTCString(), "category");
         } catch(error){
             console.log(error.message);
             toast.error("Failed to delete category");
@@ -117,11 +117,11 @@ export default function CategoriesInfos({category_list = []}){
             if(formMode === "create") {
                 await createCategory(data);
                 toast("A category has been created successfully !");
-                makeActivity("FolderPlus", "A category has been created successfully !", new Date().toUTCString(), "project");
+                makeActivity("Tag", "A category has been created successfully !", new Date().toUTCString(), "category");
             } else if (formMode === "update" && selectedCategory) {
                 await updateCategory(selectedCategory.id, data);
                 toast("A category has been updated successfully !");
-                makeActivity("FolderEdit", "A category has been updated successfully !", new Date().toUTCString(), "project");
+                makeActivity("Tag", "A category has been updated successfully !", new Date().toUTCString(), "category");
             }
             handleDialogOpenChange(false);
         } catch(error) {
@@ -167,18 +167,22 @@ export default function CategoriesInfos({category_list = []}){
             </Dialog>
  
             <div className="categories-infos">
-                <div className="card-header px-2 pt-2 flex justify-between">
+                <div className="card-header px-2 pt-2 flex justify-between shrink-0">
                     <div className="flex gap-2 items-center">
                         <Separator orientation="vertical" className={"bg-(--text-accent)"} />
                         <span className="text-(--text-accent) font-semibold">My Categories</span>
                     </div>
                     <Badge className={"bg-(--text-accent) rounded-[5px] font-semibold"}> {category_list.length} </Badge>
                 </div>
-                <div className="flex flex-col gap-3 mt-6">
-                    <Button variant={"accent"} style={{width: "max-content"}} onClick={handleCreate}> <LucideIcon.Plus /> Add new </Button>
-                    {category_list.map((value, index)=>(
-                        <CategoriesItems key={value._id || index} id={value._id} category_name={value.category_name} category_icon={value.category_icon} onEdit={handleEdit}/>
-                    ))}
+                <div className="flex flex-col gap-3 mt-4">
+                    <Button variant={"accent"} style={{width: "max-content"}} onClick={handleCreate} className="shrink-0 cursor-pointer"> <LucideIcon.Plus /> Add new </Button>
+                    {category_list.length === 0 ? (
+                        <p className="text-(--text-secondary) text-sm py-2">No categories found</p>
+                    ) : (
+                        category_list.map((value, index)=>(
+                            <CategoriesItems key={value._id || index} id={value._id} category_name={value.category_name} category_icon={value.category_icon} onEdit={handleEdit}/>
+                        ))
+                    )}
                 </div>
             </div>
         </>

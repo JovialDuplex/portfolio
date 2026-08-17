@@ -1,51 +1,33 @@
-import {
-  FaCode,
-  FaTachometerAlt,
-  FaServer,
-  FaPencilRuler,
-} from "react-icons/fa";
-
 import Hero from "@/components/hero";
-import { loremIpsum } from "lorem-ipsum";
 import useUserStore from "@/store/userStore";
 import ServiceCard from "@/components/service-card";
-import { SiJavascript, SiJavascriptHex, SiNextdotjs } from "@icons-pack/react-simple-icons";
+import { useEffect, useState } from "react";
+import useService from "@/hooks/services";
+import useProject from "@/hooks/projects";
+import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import ProjectCard from "@/components/project-card";
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
-
-  const services = [
-    {
-      icon: <FaCode size={28} />,
-      title: "Développement Web",
-      description:
-        "Je conçois et développe des applications web modernes, performantes et évolutives avec des technologies de pointe.",
-      tags: ["React", "Next.js", "Tailwind"],
-    },
-    {
-      icon: <FaTachometerAlt size={28} />,
-      title: "Performance & SEO",
-      description:
-        "Optimisation des performances et du référencement pour que vos applications soient rapides et visibles.",
-      tags: ["SEO", "Lighthouse", "Speed"],
-    },
-    {
-      icon: <FaServer size={28} />,
-      title: "Applications sur mesure",
-      description:
-        "Développement d'applications fullstack adaptées à vos besoins métiers spécifiques.",
-      tags: ["API", "DB", "Fullstack"],
-    },
-    {
-      icon: <FaPencilRuler size={28} />,
-      title: "UI/UX Design",
-      description:
-        "Conception d'interfaces utilisateur intuitives et esthétiques pour une expérience optimale.",
-      tags: ["Figma", "UI/UX", "Prototyping"],
-    },
-  ];
+  const {getServices} = useService();
+  const {projects, getAllProjects} = useProject();
+  const [services, setServices] = useState([]);
 
   const { user } = useUserStore();
-  console.log(user);
+  
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    const getData = async function(){
+      const serviceData = await getServices();
+      getAllProjects();
+      setServices(serviceData);
+    }
+    getData();
+  }, []);
+
+  const [activeCard, setActiveCard] = useState(null);
 
   return (
     <div className="home-page">
@@ -58,21 +40,49 @@ export default function HomePage() {
       />
 
       {/*------- section service ------- */}
-      <section className="my-0 mx-auto pt-12 pb-8 px-20">
-        <div className="mb-12 text-center">
-          <p className="font-semibold text-(--text-accent) text-[0.85rem] uppercase mb-2">
+      <section className="mx-auto py-6 px-4 sm:px-8 lg:px-16 border-t-2 border-t-(--border-card)">
+        <div className="mb-5 text-center">
+          <p className="font-semibold text-(--text-accent) text-[0.85rem] capitalize mb-2">
             That I do
           </p>
           <h2 className={"font-extrabold text-(--text-primary) "} style={{ fontSize: "clamp(1.6rem, 4vw, 2.2rem)" }}>
             My services
           </h2>
+          <Button className={"mt-2 cursor-pointer"} variant={"accent"} onClick={()=>navigate("/services")}> See all services <ArrowRight /> </Button>
         </div>
 
-        {/* <div className="grid grid-cols-4 gap-6">
-                    {services.map((service, index)=> (
-                        <ServiceCard service={service} key={index}/>
-                    ))}
-                </div> */}
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {services.map((service, index)=> (
+              <ServiceCard service={service} key={index}/>
+          ))}
+        </div>
+      </section>
+
+      {/* -------- project section ------- */}
+      <section className="mt-10 mx-auto px-4 sm:px-8 lg:px-16 py-6 border-t-2 border-t-(--border-card)">
+        <div className="mb-5 text-center">
+          <p className="text-(--text-accent) font-semibold capitalize mb-2 text-[0.85rem]">
+            what i did before 
+          </p>
+          <h2 className="font-extrabold text-(--text-primary)" style={{fontSize: "clamp(1.6rem, 4vw, 2.2rem)"}}> My Projects </h2>
+          <Button className="mt-2 cursor-pointer" variant={'accent'} onClick={()=>navigate("/projects")}> See all projects <ArrowRight /> </Button>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {projects.map((project, index) => (
+            <ProjectCard key={index}
+                id = {project._id}
+                title={project.project_title}
+                desc={project.project_desc}
+                status={project.project_status}
+                image= {import.meta.env.VITE_URL_BACKEND + "/" + project.project_cover_image}
+                isFocus = {activeCard === index}
+                onFocus = {()=> setActiveCard(activeCard === index ? null : index)}
+            />
+        ))}
+          
+        </div>
       </section>
     </div>
   )

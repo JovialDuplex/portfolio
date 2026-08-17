@@ -1,45 +1,45 @@
-import {InputGroup, InputGroupAddon, InputGroupInput, } from "@/components/ui/input-group";
-import {Search, Plus, FolderX, FolderPlus, FolderEdit} from "lucide-react";
+import { InputGroup, InputGroupAddon, InputGroupInput, } from "@/components/ui/input-group";
+import { Search, Plus, FolderX, FolderPlus, FolderEdit } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {Badge} from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
 import useThemeStore from "@/store/themStore";
 import { useEffect, useState } from "react";
 import useProject from "@/hooks/projects";
 import ProjectForm from "@/components/projectForm";
-import {FaTrash, FaPencil} from "react-icons/fa6";
+import { FaTrash, FaPencil } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa";
 import useProjectStore from "@/store/useProjectStore";
 import { toast } from "sonner";
 import useActivitiesStore from "@/store/activtiesStore";
 import * as LucideIcon from "lucide-react";
 
-const ProjectCard = ({id, title, desc, image, status, isFocus, onFocus, onUpdate, project})=>{
-    const {theme} = useThemeStore();
-    const {deleteProject} = useProject();
-    const {addActionProject} = useProjectStore();
-    const {makeActivity} = useActivitiesStore();
+const ProjectCard = ({ id, title, desc, image, status, isFocus, onFocus, onUpdate, project }) => {
+    const { theme } = useThemeStore();
+    const { deleteProject } = useProject();
+    const { addActionProject } = useProjectStore();
+    const { makeActivity } = useActivitiesStore();
 
-    const deleteMyProject = async function(event){
+    const deleteMyProject = async function (event) {
         event.stopPropagation()
-        try{
-            await deleteProject(id); 
+        try {
+            await deleteProject(id);
             addActionProject();
             makeActivity("FolderX", "A project has been deleted successfully !", new Date().toUTCString(), "project");
             toast.warning("This project has been delete successfuly");
-        } catch(error) {
+        } catch (error) {
             throw error
         }
     };
 
     return (
-        <div onClick={onFocus} className={`card-container flex flex-col rounded-(--radius-card) max-h-100 cursor-pointer border-(--border-card)`}>
+        <div onClick={onFocus} className={`card-container flex flex-col rounded-(--radius-card) max-h-100 w-auto mx-5 sm:mx-0 cursor-pointer border-(--border-card)`}>
             <div className="card-main h-full p-2 bg-(--bg-card) rounded-(--radius-card)">
                 <div className="card-header flex flex-col gap-2">
-                    <img src={image} alt={"card-image"} className="h-50 w-full rounded-(--radius-card)"/>
+                    <img src={image} alt={"card-image"} className="h-50 w-full rounded-(--radius-card)" />
                     <div className={`control-box py-0.5 ${!isFocus && "hidden"} w-full grid grid-cols-3 gap-2 *:w-full`}>
-                        <Button className={`${theme === "dark" && "bg-red-500 hover:bg-red-600"} cursor-pointer` } onClick={deleteMyProject}><FaTrash className="text-white"/> </Button>
-                        <Button className={`${theme === "dark" && "bg-(--text-accent) hover:bg-(--text-accent-glow)"} cursor-pointer w-1/2`} onClick={()=>onUpdate(project)}><FaPencil className="text-white"/></Button>
-                        <Button className={`cursor-pointer bg-blue-400 hover:bg-blue-500`}> <FaEye/> </Button>
+                        <Button className={`${theme === "dark" && "bg-red-500 hover:bg-red-600"} cursor-pointer`} onClick={deleteMyProject}><FaTrash className="text-white" /> </Button>
+                        <Button className={`${theme === "dark" && "bg-(--text-accent) hover:bg-(--text-accent-glow)"} cursor-pointer w-1/2`} onClick={() => onUpdate(project)}><FaPencil className="text-white" /></Button>
+                        <Button className={`cursor-pointer bg-blue-400 hover:bg-blue-500`}> <FaEye /> </Button>
                     </div>
                     <div className="flex justify-between mt-3 items-center">
                         <span className="font-bold text-[16px] capitalize"> {title} </span>
@@ -51,19 +51,19 @@ const ProjectCard = ({id, title, desc, image, status, isFocus, onFocus, onUpdate
                     <div className={"text-(--text-secondary) "}>{desc}</div>
                 </div>
             </div>
-    
+
         </div>
 
     )
 };
 
-export default function AdminProjectsPage(){
+export default function AdminProjectsPage() {
     const [query, setQuery] = useState("");
     const [activeCard, setActiveCard] = useState(null);
 
-    const {projects, getAllProjects} = useProject();
-    const filteredItems = projects.filter((project)=> project.project_title.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
-    const {actionProject} = useProjectStore();
+    const { projects, getAllProjects } = useProject();
+    const filteredItems = projects.filter((project) => project.project_title.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
+    const { actionProject } = useProjectStore();
 
     const [projectForm, setProjectForm] = useState({
         mode: "create",
@@ -72,36 +72,36 @@ export default function AdminProjectsPage(){
 
     const [openForm, setOpenForm] = useState(false);
 
-    const openAddProjectForm = function(){
+    const openAddProjectForm = function () {
         setOpenForm(true);
         setProjectForm({ mode: "create", project: null, });
     };
 
-    const openUpdateForm = function(project) {
+    const openUpdateForm = function (project) {
         setOpenForm(true);
-        setProjectForm({ mode: "update", project: project});
+        setProjectForm({ mode: "update", project: project });
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         getAllProjects();
     }, [actionProject]);
 
     return (
-        <div className="flex flex-col gap-10 text-(--text-primary)">
-            
-            <header className="header flex flex-col gap-5"> 
-                <div className="first-header flex justify-between">
+        <div className="flex flex-col gap-6 text-(--text-primary) py-2">
+
+            <header className="header flex flex-col gap-5">
+                <div className="first-header flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <span className="title text-2xl font-bold uppercase">My Projects</span>
-                    <InputGroup className={"w-100"}>
+                    <InputGroup className={"w-full sm:w-80"}>
                         <InputGroupAddon className={"bg-transparent hover:bg-transparent hover:text-white cursor-pointer"}> <Search /> </InputGroupAddon>
-                        <InputGroupInput type={"text"} value={query} onChange={(e)=> setQuery(e.target.value)} name={"search"} placeholder={"Search Projects ...."} />
+                        <InputGroupInput type={"text"} value={query} onChange={(e) => setQuery(e.target.value)} name={"search"} placeholder={"Search Projects ...."} />
                     </InputGroup>
                 </div>
 
-                <div className="second-header font-semibold flex justify-between">
+                <div className="second-header font-semibold flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                     <div>
                         <Button onClick={openAddProjectForm} className={"cursor-pointer hover:bg-blue-600 bg-(--text-accent)"}> <Plus /> Add New Project</Button>
-                        <ProjectForm open={openForm}  mode={projectForm.mode} project={projectForm.project} setOpen={setOpenForm}/>
+                        <ProjectForm open={openForm} mode={projectForm.mode} project={projectForm.project} setOpen={setOpenForm} />
                     </div>
                     <span className="">Total Project : <Badge className={"bg-(--text-accent)"}>{projects.length}</Badge></span>
                 </div>
@@ -109,33 +109,33 @@ export default function AdminProjectsPage(){
             </header>
 
             {/* section principale  */}
-            <section className="main-section min-h-0 px-3 py-7 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-                
-                { query && filteredItems.length === 0 ? projects.map((project, index)=> (
-                    <ProjectCard 
+            <section className="main-section min-h-0 px-1 py-4 overflow-y-auto flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+
+                {query && filteredItems.length === 0 ? projects.map((project, index) => (
+                    <ProjectCard
                         key={index}
                         id={project._id}
                         onUpdate={openUpdateForm}
-                        title={project.project_title} 
+                        title={project.project_title}
                         project={project}
                         desc={project.project_desc}
                         image={`${import.meta.env.VITE_URL_BACKEND}/${project.project_cover_image}`}
                         status={project.project_status}
                         isFocus={activeCard === index}
-                        onFocus={()=>{setActiveCard(activeCard === index ? null : index)}}
+                        onFocus={() => { setActiveCard(activeCard === index ? null : index) }}
                     />
                 )) : filteredItems.map((project, index) => (
-                    <ProjectCard 
+                    <ProjectCard
                         key={index}
                         id={project._id}
                         title={project.project_title}
-                        onUpdate={openUpdateForm} 
+                        onUpdate={openUpdateForm}
                         project={project}
                         desc={project.project_desc}
                         image={`${import.meta.env.VITE_URL_BACKEND}/${project.project_cover_image}`}
                         status={project.project_status}
                         isFocus={activeCard === index}
-                        onFocus={()=>{setActiveCard(activeCard === index ? null : index)}}
+                        onFocus={() => { setActiveCard(activeCard === index ? null : index) }}
                     />
                 ))}
 

@@ -26,12 +26,12 @@ const AdminLayout = function(){
   useTokenWatcher();
 
   return (
-    <div className='h-screen flex flex-col lg:grid lg:grid-cols-12'>
-      <aside className='lg:col-span-2 [background:var(--bg-page)] text-(--text-primary) lg:border-r-2 border-(--border-navbar) '>
+    <div className='min-h-screen lg:h-screen flex flex-col lg:grid lg:grid-cols-12 overflow-hidden'>
+      <aside className='lg:col-span-2 [background:var(--bg-page)] text-(--text-primary) lg:border-r-2 border-(--border-navbar) shrink-0'>
         <NavBarAdmin/>
       </aside>
 
-      <main className="lg:col-span-10 flex-1 h-full min-h-0 overflow-hidden *:py-2 *:w-full *:h-full *:px-4 [background:var(--bg-page)]">
+      <main className="lg:col-span-10 flex-1 h-full min-h-0 overflow-y-auto p-4 sm:p-6 [background:var(--bg-page)]">
         <IconRegistryProvider>
           <Outlet />
         </IconRegistryProvider>
@@ -42,11 +42,11 @@ const AdminLayout = function(){
 
 const ClientLayout = function(){
   return (
-    <div className='h-screen flex flex-col'>
+    <div className='min-h-screen lg:h-screen flex flex-col overflow-hidden'>
       <header className="app-header fixed top-0 z-10 bg-(--bg-navbar) w-full h-16">
         <NavBar />
       </header>
-      <main className="*:w-full *:h-full *:px-4 app-body mt-16 flex-1 [background:var(--bg-page)]">
+      <main className="p-3 sm:p-6 app-body mt-16 flex-1 overflow-y-auto [background:var(--bg-page)]">
         <IconRegistryProvider>
           <Outlet />
         </IconRegistryProvider>

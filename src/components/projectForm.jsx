@@ -159,7 +159,7 @@ export default function ProjectForm({mode, open, project, setOpen}){
     return (                    
         <Dialog open={open} onOpenChange={setOpen}>
             
-            <DialogContent className={"flex flex-col [background:var(--bg-page)] text-(--text-primary) h-11/12 overflow-y-auto w-8/12! max-w-200!"}>
+            <DialogContent className={"flex flex-col [background:var(--bg-page)] text-(--text-primary) max-h-[90vh] overflow-y-auto w-[92vw] sm:w-[85vw] md:w-8/12 max-w-2xl"}>
                 <DialogHeader className={"shrink-0"}>
                     <DialogTitle className={"text-xl"}> {mode === "update" ? "Update a Project" : "Add a Project"} </DialogTitle>
                     <DialogDescription> Fill this following form for {mode === "update" ? "update" : "add" } a project in the list </DialogDescription>

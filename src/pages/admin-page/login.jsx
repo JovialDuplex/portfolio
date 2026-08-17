@@ -42,13 +42,13 @@ export default function LoginPage (){
 
     return (
         <div 
-            className="login-page [background:var(--bg-page)] text-(--text-primary) h-screen w-full flex flex-col gap-5 justify-center items-center"
+            className="login-page [background:var(--bg-page)] text-(--text-primary) min-h-screen w-full flex flex-col gap-6 justify-center items-center p-4"
         >
-            <img alt={"logo-app"} src={"/logo.png"} className="w-30 h-30 rounded-full"/>
+            <img alt={"logo-app"} src={"/logo.png"} className="w-24 h-24 sm:w-28 sm:h-28 rounded-full shadow-lg"/>
             
-            <div className="login-container flex flex-col px-4 py-6 bg-(--bg-card-form) border-(--text-accent) backdrop:blur-lg border w-3/12 min-w-[320px] max-w-175 h-6/12 rounded-(--radius-card)">
+            <div className="login-container flex flex-col px-6 py-8 bg-(--bg-card-form) border-(--text-accent) backdrop:blur-lg border w-full sm:w-10/12 md:w-6/12 lg:w-4/12 max-w-md rounded-(--radius-card) shadow-2xl">
                 <div className="form-header flex justify-center">
-                    <span className="form-title text-xl uppercase font-semibold"> Admin Login Form </span>
+                    <span className="form-title text-xl uppercase font-bold tracking-wide"> Admin Login Form </span>
                 </div>
 
                 <form className="mt-5 flex flex-col gap-5" onSubmit={handleSubmit(loginAdmin)}>
@@ -62,11 +62,11 @@ export default function LoginPage (){
                         {errors.user_account_password && <FieldError>{errors.user_account_password.message}</FieldError>}
                         <InputGroup className={"border-(--text-accent)"}>
                             <InputGroupInput {...register("user_account_password")} name={"user_account_password"} id={"user_account_password"} type={show ? "text" : "password"}/>
-                            <InputGroupButton onClick={toggleShowPassword} className={"cursor-pointer"}>{show ? <Eye />: <EyeClosed />} </InputGroupButton>
+                            <InputGroupButton type="button" onClick={toggleShowPassword} className={"cursor-pointer"}>{show ? <Eye />: <EyeClosed />} </InputGroupButton>
                         </InputGroup>
                     </Field>
                     <Field>
-                        <Button className={"bg-(--text-accent) cursor-pointer hover:bg-(--text-accent-glow)"} type={"submit"}> {isloading ? <Spinner className={"size-5"}/> : "Login"} </Button>
+                        <Button className={"bg-(--text-accent) cursor-pointer hover:bg-(--text-accent-glow) font-bold py-3 mt-2"} type={"submit"}> {isloading ? <Spinner className={"size-5"}/> : "Login"} </Button>
                     </Field>
                 </form>
             </div>   
