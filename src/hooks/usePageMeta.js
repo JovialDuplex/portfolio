@@ -54,7 +54,7 @@ export default function usePageMeta({
     keywords,
     url,
     jsonLd,
-}) {
+} = {}) {
     const pathname = window.location.pathname;
 
     useEffect(() => {
