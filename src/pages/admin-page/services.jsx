@@ -8,6 +8,7 @@ import ServiceForm from "@/components/service-form";
 import useActivitiesStore from "@/store/activtiesStore";
 import { Icon } from "@/components/ui/icon-picker";
 import { toast } from "sonner";
+import usePageMeta from "@/hooks/usePageMeta";
 
 const ServiceCard = function ({ service, isFocus, onFocus, onUpdate }) {
     const { deleteService } = useService();
@@ -66,6 +67,11 @@ export default function AdminServicesPage() {
     const [services, setServices] = useState([]);
     const [query, setQuery] = useState("");
 
+    usePageMeta({
+        title: "Manage Services",
+        description: "Manage the services offered by your portfolio.",
+    });
+
     const [openServiceForm, setOpenServiceForm] = useState(false);
     const [serviceForm, setServiceForm] = useState({
         mode: "create",
@@ -98,7 +104,7 @@ export default function AdminServicesPage() {
 
     return (
         <div className="text-(--text-primary) py-2 flex flex-col gap-6">
-            {/* header de la page des services */}
+            {/* services page header */}
             <header className="header flex flex-col gap-5">
                 <div className="first-header flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <span className="title text-2xl font-bold uppercase">My Services</span>
@@ -118,7 +124,7 @@ export default function AdminServicesPage() {
 
             <ServiceForm open={openServiceForm} mode={serviceForm.mode} service={serviceForm.service} setOpen={setOpenServiceForm} />
 
-            {/* Section principale de la page des service */}
+            {/* Main section of the services page */}
             <section className="main-section min-h-0 px-1 py-4 overflow-y-auto flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                 {
                     filteredServices.length === 0 ? <span>No services found</span> :

@@ -1,5 +1,6 @@
 import './App.css'
-import {BrowserRouter, Routes, Route, Outlet, useLocation} from "react-router-dom";
+import { useEffect } from "react";
+import {BrowserRouter, Routes, Route, Outlet} from "react-router-dom";
 import HomePage from './pages/Home';
 import ServicesPage from './pages/Services';
 import ProjectsPage from './pages/Projects';
@@ -17,12 +18,14 @@ import SeeProject from './pages/SeeProject';
 import { Toaster } from '@/components/ui/sonner';
 import ProtectedRoute from './components/ProtectedRoute';
 import useTokenWatcher from './hooks/useTokenWatcher';
+import useUserStore from './store/userStore';
 
 import {IconRegistryProvider } from "./index";
   
+import usePageMeta from "./hooks/usePageMeta";
 
 const AdminLayout = function(){
-  // Surveille l'expiration du token et déclenche la déconnexion automatique
+  // Watches the token expiration and triggers automatic logout
   useTokenWatcher();
 
   return (
@@ -41,6 +44,16 @@ const AdminLayout = function(){
 };
 
 const ClientLayout = function(){
+  const user = useUserStore((state)=>state.user);
+  const fetchPublicInfos = useUserStore((state)=>state.fetchPublicInfos);
+
+  // Fetch public user info through the API /get-infos route (no auth required)
+  useEffect(() => {
+    if (!user) {
+      fetchPublicInfos().catch(()=>{});
+    }
+  }, [user, fetchPublicInfos]);
+
   return (
     <div className='min-h-screen lg:h-screen flex flex-col overflow-hidden'>
       <header className="app-header fixed top-0 z-10 bg-(--bg-navbar) w-full h-16">
@@ -56,23 +69,21 @@ const ClientLayout = function(){
 };
 
 export default function App(){
-  const subdomain = location.host.split(".")[0];
   const theme = useThemeStore((state)=>state.theme);
-  
+
+  usePageMeta();
 
   return (
     <div data-theme={theme}>
       <Toaster/>
       <BrowserRouter>
         <Routes>
-          {/* routes administrateur */}
-          
+          {/* admin routes */}
 
             <Route path={"/admin/login"} element={<LoginPage/>} />
-            <Route path={"/error"} element={<h1>Une erreur est survenue</h1>}/>
+            <Route path={"/error"} element={<h1>An error has occurred</h1>}/>
 
-            
-            {/* Routes protégées : nécessitent un token valide */}
+            {/* Protected routes: require a valid token */}
             <Route element={<ProtectedRoute/>}>
               <Route path={"/admin/dashboard"} element={<AdminLayout/>}>
                 <Route path={"home"} element={<AdminDashboardPage/>}/>
@@ -81,7 +92,7 @@ export default function App(){
                 <Route path={"settings"} element={<AdminSettingsPage/>} />
               </Route>
             </Route>
-          
+
             <Route element={<ClientLayout/>}>
               <Route path="/" element={<HomePage />} />
               <Route path="/services" element={<ServicesPage />} />
@@ -89,10 +100,7 @@ export default function App(){
               <Route path="/about-me" element={<InfosPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path={"/projects/:id_project"} element={<SeeProject />} />
-              
             </Route>
-          
-            
         </Routes>
       </BrowserRouter>
     </div>

@@ -3,7 +3,7 @@ import axios from "axios";
 
 const useCategories = function() {
     const {token} = useUserStore();
-    // lecture de toutes les categories 
+    // fetch all the categories 
     const getCategories = async function(){
         try {
             const response = await axios.get(`${import.meta.env.VITE_URL_BACKEND}/category`);

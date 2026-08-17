@@ -4,10 +4,12 @@ import * as SimpleIcon from "@icons-pack/react-simple-icons";
 
 export default function Hero({name, secondName, job, description, profilePicture}){
     const {user} = useUserStore();
+    const socialNetworks = Array.isArray(user?.user_socialNetworks) ? user.user_socialNetworks : [];
+
     return (
         <section className="max-w-6xl my-0 mx-auto py-8 sm:py-16 lg:py-20 px-4 sm:px-8 grid grid-cols-1 lg:grid-cols-2 items-center gap-8 lg:gap-12">
 
-            {/* block de gauche */}
+            {/* left block */}
             <div className="relative flex flex-col items-start">
                 <p className="text-base sm:text-lg text-(--text-secondary) mb-2 font-medium">
                     My Name is
@@ -23,7 +25,7 @@ export default function Hero({name, secondName, job, description, profilePicture
 
                 <p className="my-6 text-[0.95rem] sm:text-[0.97rem] leading-[1.7] max-w-lg text-(--text-secondary)"> {description} </p>
             
-                {/* bouton cta  */}
+                {/* call to action */}
                 <div className="flex gap-4 mb-8 flex-wrap w-full sm:w-auto">
                     <Link to={"/projects"} 
                         className="py-3 px-6 rounded-[8px] font-bold text-center hover:-translate-y-px text-white transition-all duration-200"
@@ -41,9 +43,9 @@ export default function Hero({name, secondName, job, description, profilePicture
                     </Link>
                 </div>
 
-                {/* reseaux sociaux */}
+                {/* social networks */}
                 <div className="flex gap-4 flex-wrap">
-                        {user.user_socialNetworks.map((value, index)=>{
+                        {socialNetworks.map((value, index)=>{
                             const Icon = SimpleIcon[value.social_icon]
                             if (!Icon) return null;
                             return (
@@ -62,7 +64,7 @@ export default function Hero({name, secondName, job, description, profilePicture
                 </div>
             </div>
 
-            {/* block de droite avec la photo */}
+            {/* right block with the profile picture */}
             <div className="w-56 h-56 sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-105 lg:h-105 mx-auto border-none overflow-hidden rounded-full shrink-0 shadow-lg flex items-center justify-center">
                 <img src={profilePicture} alt={"profile picture"} className="w-full h-full object-cover"/>
             </div>

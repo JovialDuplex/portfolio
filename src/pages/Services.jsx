@@ -3,11 +3,19 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import useService from "@/hooks/services";
 import { Search } from "lucide-react"
 import { useEffect, useState } from "react";
+import usePageMeta from "@/hooks/usePageMeta";
 
 export default function ServicesPage(){
     const [query, setQuery] = useState("");
     const [services, setServices] = useState([]);
     const {getServices} = useService();
+
+    usePageMeta({
+        title: "My Services",
+        description: "Discover the services I offer: web development, design, and more.",
+        url: "/services",
+    });
+
     useEffect(()=>{
         getServices().then((myservices)=>{
             setServices(myservices || []);

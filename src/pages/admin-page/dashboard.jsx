@@ -25,6 +25,8 @@ import CategoriesInfos from "@/components/categories-infos";
 import useCategories from "@/hooks/categories";
 import useSkills from "@/hooks/skills";
 import useService from "@/hooks/services";
+import { resolveAssetUrl } from "@/utils/media";
+import usePageMeta from "@/hooks/usePageMeta";
 
 
 export default function AdminDashboardPage() {
@@ -32,6 +34,11 @@ export default function AdminDashboardPage() {
     const [openAlertDialog, setOpenAlertDialog] = useState(false);
     const [services, setServices] = useState([]);
     const [skills, setSkills] = useState([]);
+
+    usePageMeta({
+        title: "Admin Dashboard",
+        description: "Portfolio admin dashboard.",
+    });
 
     const { getAllProjects, projects } = useProject();
     const { getCategories } = useCategories();
@@ -65,7 +72,7 @@ export default function AdminDashboardPage() {
 
     const stats = [
         { label: "Services", value: services.length, icon: Package },
-        { label: "Projetcs", value: projects.length, icon: FolderOpen },
+        { label: "Projects", value: projects.length, icon: FolderOpen },
         { label: "Skills", value: skills.length, icon: GraduationCap },
         { label: "Categories", value: categoryList.length, icon: Tag },
     ];
@@ -94,9 +101,9 @@ export default function AdminDashboardPage() {
                 <header className="dashboard-header flex justify-between items-center border-b border-(--border-navbar) py-3 shrink-0 gap-4">
                     <div>
                         <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold uppercase tracking-tight text-(--text-primary)">
-                            Bienvenue,{" "}
+                            Welcome back,{" "}
                             <span className="bg-linear-135 from-(--text-accent-light) to-[#1d4ed8] bg-clip-text text-transparent">
-                                {user.user_name} {user.user_second_name}
+                                {user.user_name} {user.user_secondName}
                             </span>
                         </h1>
                         <p className="text-sm sm:text-base text-(--text-secondary) mt-1 font-medium tracking-wide">
@@ -104,7 +111,7 @@ export default function AdminDashboardPage() {
                         </p>
                     </div>
                     <div className="h-16 w-16 sm:h-20 sm:w-20 overflow-hidden rounded-full border-2 border-(--text-primary) shrink-0">
-                        <img src={import.meta.env.VITE_NODE_ENV === "production" ? user.user_picture : `${import.meta.env.VITE_URL_BACKEND}/${user?.user_picture}`} alt={"profile-picture"} className="h-full w-full object-cover" />
+                        <img src={resolveAssetUrl(user?.user_picture)} alt={"profile-picture"} className="h-full w-full object-cover" />
                     </div>
                 </header>
 
@@ -115,15 +122,15 @@ export default function AdminDashboardPage() {
                         <StatCard statsList={stats} />
                     </section>
 
-                    {/* panneaux de bas  */}
+                    {/* bottom panels */}
                     <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-2 gap-5">
-                        {/* -----------section Categories----------- */}
+                        {/* -----------Categories section----------- */}
                         <ScrollArea className="message-infos p-3 bg-(--bg-card) h-80 lg:h-[400px] border border-(--border-card) rounded-(--radius-card)">
                             <ScrollBar />
                             <CategoriesInfos category_list={categoryList} />
                         </ScrollArea>
 
-                        {/*-----------section activites----------- */}
+                        {/*-----------activities section----------- */}
                         <ScrollArea className="activities-infos p-3 bg-(--bg-card) h-80 lg:h-[400px] border border-(--border-card) rounded-(--radius-card)">
                             <ScrollBar />
                             <ActivitiesInfos activities={activityList} />

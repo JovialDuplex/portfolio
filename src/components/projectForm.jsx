@@ -14,6 +14,7 @@ import {Spinner} from "@/components/ui/spinner";
 import useProjectStore from "@/store/useProjectStore";
 import CustomTextarea from "./custom-textarea";
 import useActivitiesStore from "@/store/activtiesStore";
+import { resolveAssetUrl } from "@/utils/media";
 
 export default function ProjectForm({mode, open, project, setOpen}){
 
@@ -83,7 +84,7 @@ export default function ProjectForm({mode, open, project, setOpen}){
 
     useEffect(()=>{
         if(mode==="update" && project) {
-            setPreviewImageUrl(`${import.meta.env.VITE_URL_BACKEND}/${project.project_cover_image}`);
+            setPreviewImageUrl(resolveAssetUrl(project.project_cover_image));
             reset({
                 project_title: project.project_title,
                 project_desc: project.project_desc,
@@ -110,18 +111,18 @@ export default function ProjectForm({mode, open, project, setOpen}){
 
     const updateMyProject = async function(data) {
         try {
-            // recuperation des champs qui ont ete modifie en dehors du champ project_cover_image
+            // Collect the fields that were modified, excluding project_cover_image
             const changedFields = Object.keys(dirtyFields).filter(key=> key !== "project_cover_image");
 
             if(changedFields.length === 0 && !dirtyFields.project_cover_image) {
-                // aucun n'a ete modifier, on ferme le formulaire 
+                // Nothing changed, close the form
                 setOpen(false);
                 return;
             }
             
             const formData = new FormData();
             changedFields.forEach(key=> formData.append(key, data[key]));
-            // ajouter une image si l'utilisateur en a selectionner une nouvelle 
+            // Add an image only if the user selected a new one
             if (dirtyFields.project_cover_image && data.project_cover_image instanceof File) {
                 formData.append("project_cover_image", data.project_cover_image);
             }
@@ -232,8 +233,8 @@ export default function ProjectForm({mode, open, project, setOpen}){
                     </Field>
 
                     <Field>
-                        <FieldLabel htmlFor={"project_image"} className={"capitalize"}> Statut Project </FieldLabel>
-                        <FieldDescription> Select an actualy statut of your project </FieldDescription>
+                        <FieldLabel htmlFor={"project_image"} className={"capitalize"}> Project Status </FieldLabel>
+                        <FieldDescription> Select the actual status of your project </FieldDescription>
                         <div className="flex items-center gap-2 rounded-[5px] p-1 border border-(--border-input)">
                             <FaCircle className={selectValue == "pending" ? "text-yellow-500" : "text-green-500"}/>
                             <select className="flex-1" {...register("project_status")} name={"project_status"}>

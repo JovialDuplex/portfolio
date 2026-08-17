@@ -12,6 +12,7 @@ import useProjectStore from "@/store/useProjectStore";
 import { toast } from "sonner";
 import useActivitiesStore from "@/store/activtiesStore";
 import * as LucideIcon from "lucide-react";
+import usePageMeta from "@/hooks/usePageMeta";
 
 const ProjectCard = ({ id, title, desc, image, status, isFocus, onFocus, onUpdate, project }) => {
     const { theme } = useThemeStore();
@@ -61,6 +62,11 @@ export default function AdminProjectsPage() {
     const [query, setQuery] = useState("");
     const [activeCard, setActiveCard] = useState(null);
 
+    usePageMeta({
+        title: "Manage Projects",
+        description: "Manage the projects displayed on your portfolio.",
+    });
+
     const { projects, getAllProjects } = useProject();
     const filteredItems = projects.filter((project) => project.project_title.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
     const { actionProject } = useProjectStore();
@@ -108,7 +114,7 @@ export default function AdminProjectsPage() {
 
             </header>
 
-            {/* section principale  */}
+            {/* main section */}
             <section className="main-section min-h-0 px-1 py-4 overflow-y-auto flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
 
                 {query && filteredItems.length === 0 ? projects.map((project, index) => (

@@ -5,7 +5,7 @@ import useUserStore from "@/store/userStore";
 
 /**
  * 
- * hook permettant la gestion des projets 
+ * Hook to manage the projects (Create, Read, Update, Delete)
  */
 const useProject =  function(){
     const navigate = useNavigate();

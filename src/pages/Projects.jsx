@@ -3,9 +3,17 @@ import {Search} from "lucide-react"
 import { useEffect, useState } from "react";
 import useProject from "@/hooks/projects";
 import ProjectCard from "@/components/project-card";
+import usePageMeta from "@/hooks/usePageMeta";
+import { resolveAssetUrl } from "@/utils/media";
 
 export default function ProjectsPage(){
     const {projects, getAllProjects} = useProject();
+
+    usePageMeta({
+        title: "My Projects",
+        description: "Browse the projects I have built, from personal experiments to client work.",
+        url: "/projects",
+    });
 
     const [query, setQuery] = useState("");
     const filteredItems = (projects || []).filter((project)=> project.project_title?.toLowerCase().includes(query.toLowerCase()));
@@ -34,7 +42,7 @@ export default function ProjectsPage(){
                             id={project._id}
                             title={project.project_title}
                             desc={project.project_desc}
-                            image={import.meta.env.VITE_NODE_ENV === "production" ? project?.project_cover_image: `${import.meta.env.VITE_URL_BACKEND}/${project?.project_cover_image}`}
+                            image={resolveAssetUrl(project?.project_cover_image)}
                             status={project.project_status}
                             isFocus={activeCard === index}
                             onFocus={()=>{setActiveCard(activeCard === index ? null : index)}}

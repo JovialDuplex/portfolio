@@ -4,11 +4,11 @@ import useUserStore from "@/store/userStore";
 import { isTokenExpired } from "@/utils/tokenUtils";
 
 /**
- * Hook qui surveille l'expiration du token JWT.
- * - Pose un setTimeout précis qui se déclenche exactement à l'expiration.
- * - Appelle logoutUser() + redirige vers /admin/login automatiquement.
- * - Se réinitialise à chaque changement de token (nouveau login).
- * - Doit être utilisé dans AdminLayout (actif uniquement sur les pages admin).
+ * Hook that watches the JWT token expiration.
+ * - Sets a precise setTimeout that fires exactly at expiration.
+ * - Calls logoutUser() + redirects to /admin/login automatically.
+ * - Resets itself on every token change (new login).
+ * - Must be used in AdminLayout (only active on admin pages).
  */
 const useTokenWatcher = function () {
     const navigate = useNavigate();
@@ -17,35 +17,35 @@ const useTokenWatcher = function () {
     const logoutUser = useUserStore((state) => state.logoutUser);
 
     useEffect(() => {
-        // Pas de token → rien à surveiller
+        // No token → nothing to watch
         if (!token || !tokenExpiration) return;
 
-        // Si déjà expiré au montage → déconnexion immédiate
+        // If already expired on mount → immediate logout
         if (isTokenExpired(token)) {
-            console.warn("Token déjà expiré au montage. Déconnexion immédiate.");
+            console.warn("Token already expired on mount. Logging out immediately.");
             logoutUser();
             navigate("/admin/login", { replace: true });
             return;
         }
 
-        // Calcul du délai restant avant expiration
+        // Compute the remaining time before expiration
         const delayMs = tokenExpiration - Date.now();
         console.info(
-            `[TokenWatcher] Token valide. Déconnexion automatique dans ${Math.round(delayMs / 1000)}s ` +
-            `(le ${new Date(tokenExpiration).toLocaleString()})`
+            `[TokenWatcher] Token valid. Automatic logout in ${Math.round(delayMs / 1000)}s ` +
+            `(on ${new Date(tokenExpiration).toLocaleString()})`
         );
 
         const timerId = setTimeout(() => {
-            console.warn("[TokenWatcher] Token expiré. Déconnexion automatique.");
+            console.warn("[TokenWatcher] Token expired. Logging out automatically.");
             logoutUser();
             navigate("/admin/login", { replace: true });
         }, delayMs);
 
-        // Nettoyage du timer si le composant se démonte ou si le token change
+        // Clean up the timer if the component unmounts or the token changes
         return () => {
             clearTimeout(timerId);
         };
-    }, [token, tokenExpiration]);
+    }, [token, tokenExpiration, navigate, logoutUser]);
 };
 
 export default useTokenWatcher;

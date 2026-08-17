@@ -8,12 +8,19 @@ import useUser from "@/hooks/user";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import {Spinner} from "@/components/ui/spinner";
+import { Spinner} from "@/components/ui/spinner";
 import { FaTruckLoading } from "react-icons/fa";
+import usePageMeta from "@/hooks/usePageMeta";
 
 export default function LoginPage (){
     const [show, setShow] = useState(false);
     const [isloading, setIsLoading] = useState(false);
+
+    usePageMeta({
+        title: "Admin Login",
+        description: "Sign in to manage your portfolio.",
+        url: "/admin/login",
+    });
 
     const toggleShowPassword = ()=>{setShow(prev => !prev)};
     const {login} = useUser();

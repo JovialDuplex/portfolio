@@ -27,7 +27,7 @@ export default function NavBar(){
     return (
         <>
             <nav className={"h-full z-100 bg-(--bg-navbar)  border-b border-(--border-navbar) py-0 px-6 flex justify-between items-center"}>
-                {/* logo de la barre de navigation ------------ */}
+                {/* navbar logo */}
                 <div className="navbar-logo flex items-center gap-3">
                     <img className="logo h-10 lg:h-12 w-auto rounded-4xl" src={navData.logo} alt={"logo-app"}/>
                     { (navData.name !=="" || navData.secondName !=="") && (<div className="app-name flex flex-col leading-tight font-bold lg:text-lg uppercase">
@@ -36,7 +36,7 @@ export default function NavBar(){
                     </div>)}
                 </div>
 
-                {/* les liens de la barre de navigation------------ */}
+                {/* navbar links */}
                 <ul className="hidden m-0 p-0 gap-6 list-none lg:flex ">
                     {navLinks.map((value, index) => (
                         <li key={index} className="">
@@ -45,20 +45,20 @@ export default function NavBar(){
                     ))}
                 </ul>
 
-                {/* boutons de telechargement du cv  et de changement de theme */}
+                {/* resume download and theme toggle buttons */}
                 <div className="flex items-center gap-3 ">
-                    {/* changer le theme  */}
+                    {/* toggle theme  */}
                     <Button onClick={toggleTheme} variant="outline" size="icon-lg" className={"rounded-4xl bg-(--bg-button) border-none text-(--text-accent) cursor-pointer"}> {theme === "light" ? <FaSun /> : <FaMoon/> } </Button>
                     
-                    {/* telecharger le cv */}
+                    {/* download resume */}
                     <Button className={"flex items-center gap-1.5 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer font-semibold text-sm py-4"} size={"lg"} style={{background: "linear-gradient(135deg, var(--text-accent), #1d4ed8)"}}><FaDownload/> Download Resume </Button>
                     
-                    {/* button hamburger pour les petits ecrans */}
+                    {/* hamburger button for small screens */}
                     <Button onClick={()=> setMenuOpen((prev)=> !prev)} className={"lg:hidden bg-transparent hover:bg-transparent text-(--text-primary) cursor-pointer"} size={"icon-lg"}> {menuOpen ? <FaTimes /> :<FaBars />} </Button>
                 </div>
             </nav>
 
-            {/* barre de navigation pour android/mobile */}
+            {/* mobile / navigation bar for small screens */}
             {menuOpen && (
                 <ul className="fixed flex flex-col text-(--text-primary) justify-center items-center gap-2 top-16 left-0 right-0 bg-(--bg-navbar) py-4 px-6 z-50 border-b border-(--border-navbar) shadow-lg lg:hidden" onClick={() => setMenuOpen(false)}>
                     {navLinks.map((value, index) => (

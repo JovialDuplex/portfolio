@@ -2,12 +2,100 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="./public/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>jovial-portfolio</title>
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Primary Meta Tags -->
+    <title>Jovial Duplex — Full-Stack Web Developer Portfolio</title>
+    <meta name="title" content="Jovial Duplex — Full-Stack Web Developer Portfolio" />
+    <meta
+      name="description"
+      content="Portfolio of Jovial Duplex, a full-stack web developer based in Douala, Cameroon. Explore my projects, services and skills, and get in touch to bring your ideas to life."
+    />
+    <meta
+      name="keywords"
+      content="Jovial Duplex, full-stack developer, web developer, portfolio, React, Node.js, MongoDB, Douala, Cameroon"
+    />
+    <meta name="author" content="Jovial Duplex" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#1d4ed8" />
+
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="canonical" href="https://jovial-portfolio.netlify.app/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://jovial-portfolio.netlify.app/" />
+    <meta property="og:title" content="Jovial Duplex — Full-Stack Web Developer Portfolio" />
+    <meta
+      property="og:description"
+      content="Portfolio of Jovial Duplex, a full-stack web developer based in Douala, Cameroon. Explore my projects, services and skills, and get in touch to bring your ideas to life."
+    />
+    <meta property="og:image" content="https://jovial-portfolio.netlify.app/logo.png" />
+    <meta property="og:site_name" content="Jovial Duplex" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://jovial-portfolio.netlify.app/" />
+    <meta name="twitter:title" content="Jovial Duplex — Full-Stack Web Developer Portfolio" />
+    <meta
+      name="twitter:description"
+      content="Portfolio of Jovial Duplex, a full-stack web developer based in Douala, Cameroon. Explore my projects, services and skills, and get in touch to bring your ideas to life."
+    />
+    <meta name="twitter:image" content="https://jovial-portfolio.netlify.app/logo.png" />
+
+    <!-- Preconnect to the API backend -->
+    <link rel="dns-prefetch" href="https://portfolio-api-tw0l.onrender.com" />
+    <link rel="preconnect" href="https://portfolio-api-tw0l.onrender.com" crossorigin />
+
+    <!-- Structured data for SEO -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://jovial-portfolio.netlify.app/#website",
+            "url": "https://jovial-portfolio.netlify.app/",
+            "name": "Jovial Duplex",
+            "inLanguage": "en",
+            "publisher": { "@id": "https://jovial-portfolio.netlify.app/#person" }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://jovial-portfolio.netlify.app/#person",
+            "url": "https://jovial-portfolio.netlify.app/",
+            "name": "Jovial Duplex",
+            "jobTitle": "Full-Stack Web Developer",
+            "image": "https://jovial-portfolio.netlify.app/logo.png",
+            "description": "Full-stack web developer based in Douala, Cameroon, building sleek and modern web applications.",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Douala",
+              "addressCountry": "CM"
+            },
+            "knowsAbout": ["Web Development", "React", "Node.js", "MongoDB", "UI/UX"]
+          },
+          {
+            "@type": "ProfessionalService",
+            "@id": "https://jovial-portfolio.netlify.app/#service",
+            "url": "https://jovial-portfolio.netlify.app/services",
+            "name": "Jovial Duplex Services",
+            "description": "Web development services: custom websites, web applications and more.",
+            "provider": { "@id": "https://jovial-portfolio.netlify.app/#person" }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      This portfolio requires JavaScript. Please enable it to view the content.
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -8,6 +8,8 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProjectCard from "@/components/project-card";
 import { useNavigate } from "react-router-dom";
+import usePageMeta from "@/hooks/usePageMeta";
+import { resolveAssetUrl } from "@/utils/media";
 
 export default function HomePage() {
   const {getServices} = useService();
@@ -15,8 +17,14 @@ export default function HomePage() {
   const [services, setServices] = useState([]);
 
   const { user } = useUserStore();
-  console.log(user);
   const navigate = useNavigate();
+
+  const userName = [user?.user_name, user?.user_secondName].filter(Boolean).join(" ");
+  usePageMeta({
+    title: userName || "Full-Stack Web Developer",
+    description: user?.user_desc || undefined,
+    image: resolveAssetUrl(user?.user_picture),
+  });
 
   useEffect(()=>{
     const getData = async function(){
@@ -31,15 +39,16 @@ export default function HomePage() {
 
   return (
     <div className="home-page">
-      {/* --------section hero----------- */}
+      {/* --------hero section----------- */}
       <Hero
-        name={user?.user_name ?? "jovial"}
+        name={user?.user_name ?? "Jovial"}
         secondName={user?.user_secondName ?? ""}
-        profilePicture={import.meta.env.VITE_NODE_ENV === "production" ? user.user_picture : `${import.meta.env.VITE_URL_BACKEND}/${user?.user_picture}`}
+        job={user?.user_jobName ?? ""}
+        profilePicture={resolveAssetUrl(user?.user_picture)}
         description={user?.user_desc ?? ""}
       />
 
-      {/*------- section service ------- */}
+      {/*------- service section ------- */}
       <section className="mx-auto py-6 px-4 sm:px-8 lg:px-16 border-t-2 border-t-(--border-card)">
         <div className="mb-5 text-center">
           <p className="font-semibold text-(--text-accent) text-[0.85rem] capitalize mb-2">
@@ -76,7 +85,7 @@ export default function HomePage() {
                 title={project.project_title}
                 desc={project.project_desc}
                 status={project.project_status}
-                image={import.meta.env.VITE_NODE_ENV === "production" ? project?.project_cover_image: `${import.meta.env.VITE_URL_BACKEND}/${project?.project_cover_image}`}
+                image={resolveAssetUrl(project?.project_cover_image)}
                 isFocus = {activeCard === index}
                 onFocus = {()=> setActiveCard(activeCard === index ? null : index)}
             />

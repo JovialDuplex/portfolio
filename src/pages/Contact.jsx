@@ -13,14 +13,20 @@ import "react-international-phone/style.css";
 import {PhoneNumberUtil} from "google-libphonenumber";
 import { FieldError } from "@/components/ui/field";
 import useUserStore from "@/store/userStore";
+import usePageMeta from "@/hooks/usePageMeta";
 
 export default function ContactPage(){
     const phoneUtil = PhoneNumberUtil.getInstance();
     const {user} = useUserStore();
-    console.log(user);
+
+    usePageMeta({
+        title: "Contact Me",
+        description: "Get in touch with me. Send a message, ask for a quote, or simply say hello.",
+        url: "/contact",
+    });
 
     const informations = [
-        {Icon: FaLocationDot, label: "Douala-Cameroon quatier bobongo petit paris", type: "location"},
+        {Icon: FaLocationDot, label: "Douala, Cameroon — Bobongo, Petit Paris", type: "location"},
         {Icon: FaEnvelope, label: user?.user_email ?? "takeuhduplex2006@gmail.com", type: "mail"},
         {Icon: FaPhone, label: user?.user_contact_phone ?? "(+237) 682354056", type: "phone"},
         {Icon: FaWhatsapp, label: user?.user_whatsapp_phone ?? "(+237) 682354056", type: "whatsapp"},

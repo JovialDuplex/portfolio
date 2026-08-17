@@ -6,7 +6,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-    /* configuration des couleurs */
+    /* color configuration */
     --bg-page :  linear-gradient(135deg, #e8f0fe 0%, #f0f7ff 50%, #dbeafe 100%);
     --bg-navbar: rgba(232,240,254,0.9);
     --border-navbar : rgba(59,130,246,0.2);

@@ -21,6 +21,7 @@ import useSkills from "@/hooks/skills";
 import useUser from "@/hooks/user";
 import { IconPicker } from "@/components/IconPicker/IconPicker";
 import * as SimpleIcons from "@icons-pack/react-simple-icons";
+import usePageMeta from "@/hooks/usePageMeta";
 
 /** Extrait le nom d'export Simple Icons (ex: SiFacebook) depuis l'id IconPicker */
 const iconIdToExportName = (iconId) => {
@@ -36,7 +37,7 @@ const stripSocialIds = (networks = []) =>
         social_url,
     }));
 
-// ─── Composant : Changement de mot de passe en 2 étapes ───────────────────────
+// ─── Component: 2-step password change ───────────────────────────────────────
 const ChangePasswordSteps = function ({ open, setOpen, onPasswordPending }) {
     const [step, setStep] = useState(0);
     const { verifyPassword } = useUser();
@@ -197,11 +198,16 @@ const ChangePasswordSteps = function ({ open, setOpen, onPasswordPending }) {
     );
 };
 
-// ─── Page principale Settings ─────────────────────────────────────────────────
+// ─── Main Settings page ──────────────────────────────────────────────────────
 export default function AdminSettingsPage() {
     const user = useUserStore((state) => state.user);
     const { getSkills, createSkill, updateSkill, deleteSkill } = useSkills();
     const { getInfos, updateUser } = useUser();
+
+    usePageMeta({
+        title: "Settings",
+        description: "Manage your profile, skills, social networks and security settings.",
+    });
 
     const personnalInfoValidation = yup.object().shape({
         user_name: yup
@@ -296,8 +302,8 @@ export default function AdminSettingsPage() {
     const canSave = formState.isDirty || isSkillsDirty || Boolean(pendingPassword);
 
     /**
-     * Synchronise les skills (create / update / delete) puis retourne les ObjectIds
-     * à enregistrer dans user_skills.
+     * Syncs the skills (create / update / delete) then returns the ObjectIds
+     * to store in user_skills.
      */
     const syncSkills = async () => {
         const skillIds = [];
@@ -329,7 +335,7 @@ export default function AdminSettingsPage() {
     };
 
     /**
-     * Construit un FormData aligné sur le modèle User + route multipart update.
+     * Builds a FormData aligned on the User model + multipart update route.
      */
     const buildUserFormData = (formData, skillIds) => {
         const body = new FormData();
@@ -692,8 +698,8 @@ export default function AdminSettingsPage() {
 
             <Tabs className={"flex flex-col flex-1 py-2 overflow-y-auto"} defaultValue={"personnal"}>
                 <TabsList className={"shrink-0 bg-(--bg-button) w-full top-0"}>
-                    <TabsTrigger value={"personnal"}>Personnal Informations</TabsTrigger>
-                    <TabsTrigger value={"jobs"}> Jobs Informations</TabsTrigger>
+                    <TabsTrigger value={"personnal"}>Personal Information</TabsTrigger>
+                    <TabsTrigger value={"jobs"}> Job Information</TabsTrigger>
                     <TabsTrigger value={"security"}> Security</TabsTrigger>
                 </TabsList>
 

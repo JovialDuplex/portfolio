@@ -15,12 +15,12 @@ const useUser = function(){
                 return mydata.message;
             }
 
-            // Décoder le token pour extraire la date d'expiration
+            // Decode the token to extract its expiration date
             const tokenExpiration = getTokenExpiration(mydata.token);
 
             loginUser(mydata.user, mydata.token, tokenExpiration);
 
-            console.log("Connexion admin réussie. Token expire le :", new Date(tokenExpiration).toLocaleString());
+            console.log("Admin login succeeded. Token expires on:", new Date(tokenExpiration).toLocaleString());
             navigate("/admin/dashboard/home");
 
         } catch(error) {
@@ -40,7 +40,7 @@ const useUser = function(){
             }
             return data?.user;
         } catch (error) {
-            console.log("Erreur lors de la récupération des infos utilisateur :", error);
+            console.log("Error while fetching user info:", error);
             throw error;
         }
     };
@@ -59,7 +59,7 @@ const useUser = function(){
             }
             return data;
         } catch (error) {
-            console.log("Erreur lors de la mise à jour de l'utilisateur :", error);
+            console.log("Error while updating the user:", error);
             throw error;
         }
     };
@@ -71,7 +71,7 @@ const useUser = function(){
             });
             return response.data;
         } catch (error) {
-            console.log("Erreur lors de la vérification du mot de passe :", error);
+            console.log("Error while verifying the password:", error);
             throw error;
         }
     };

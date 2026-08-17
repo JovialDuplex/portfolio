@@ -2,11 +2,11 @@ import axios from "axios";
 import { useState } from "react";
 import useUserStore from "@/store/userStore";
 
-/* Hook qui permet de faire la gestion des services (Create, Read, Updata, Delete) */
+/* Hook that manages services (Create, Read, Update, Delete) */
 const useService = function () {
     const { token } = useUserStore();
 
-    // Lecture de tous les services 
+    // Fetch all services 
     const getServices = async function () {
         try {
             const response = await axios.get(`${import.meta.env.VITE_URL_BACKEND}/services/`);
@@ -20,7 +20,7 @@ const useService = function () {
         }
     };
 
-    // Lecture d'un service particulier 
+    // Fetch a single service 
     const getService = async function (service_id) {
         try {
             const response = await axios.get(`${import.meta.env.VITE_URL_BACKEND}/services?id=${service_id}`);

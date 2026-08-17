@@ -2,12 +2,22 @@ import useUserStore from "@/store/userStore";
 import useSkills from "@/hooks/skills";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Mail, Phone, MapPin, Briefcase } from "lucide-react";
+import { Mail, Phone, Briefcase } from "lucide-react";
+import usePageMeta from "@/hooks/usePageMeta";
+import { resolveAssetUrl } from "@/utils/media";
 
 export default function InfosPage() {
     const { user } = useUserStore();
     const { getSkills } = useSkills();
     const [skills, setSkills] = useState([]);
+
+    const userName = [user?.user_name, user?.user_secondName].filter(Boolean).join(" ");
+    usePageMeta({
+        title: userName || "About Me",
+        description: user?.user_desc || undefined,
+        image: resolveAssetUrl(user?.user_picture),
+        url: "/about-me",
+    });
 
     useEffect(() => {
         getSkills().then((data) => setSkills(data || [])).catch(() => {});
@@ -17,16 +27,16 @@ export default function InfosPage() {
         <div className="infos-page text-(--text-primary) py-4 flex flex-col items-center gap-8 max-w-4xl mx-auto">
             <header className="flex flex-col sm:flex-row items-center gap-6 w-full p-6 bg-(--bg-card) border border-(--border-card) rounded-2xl shadow-sm">
                 <img
-                    src={import.meta.env.VITE_NODE_ENV === "production" ? user.user_picture : `${import.meta.env.VITE_URL_BACKEND}/${user?.user_picture}`}
-                    alt="profile"
+                    src={resolveAssetUrl(user?.user_picture)}
+                    alt={`${userName || "Portfolio owner"} profile picture`}
                     className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-(--text-accent) shadow-md"
                 />
                 <div className="flex flex-col items-center sm:items-start text-center sm:text-left gap-2 flex-1">
                     <h1 className="text-2xl sm:text-3xl font-extrabold capitalize">
-                        {user?.user_name ?? "Portfolio Owner"} {user?.user_secondName ?? ""}
+                        {userName || "Portfolio Owner"}
                     </h1>
                     <p className="text-(--text-accent) font-semibold text-lg flex items-center gap-2">
-                        <Briefcase size={20} /> {user?.user_job_name ?? "Fullstack Developer"}
+                        <Briefcase size={20} /> {user?.user_jobName ?? "Fullstack Developer"}
                     </p>
                     <div className="flex flex-wrap gap-4 mt-2 text-sm text-(--text-secondary) justify-center sm:justify-start">
                         {user?.user_email && (
