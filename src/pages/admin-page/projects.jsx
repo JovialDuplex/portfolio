@@ -119,7 +119,7 @@ export default function AdminProjectsPage() {
                         title={project.project_title}
                         project={project}
                         desc={project.project_desc}
-                        image={`${import.meta.env.VITE_URL_BACKEND}/${project.project_cover_image}`}
+                        image={import.meta.env.VITE_NODE_ENV === "production" ? project?.project_cover_image: `${import.meta.env.VITE_URL_BACKEND}/${project?.project_cover_image}`}
                         status={project.project_status}
                         isFocus={activeCard === index}
                         onFocus={() => { setActiveCard(activeCard === index ? null : index) }}
@@ -132,7 +132,7 @@ export default function AdminProjectsPage() {
                         onUpdate={openUpdateForm}
                         project={project}
                         desc={project.project_desc}
-                        image={`${import.meta.env.VITE_URL_BACKEND}/${project.project_cover_image}`}
+                        image={import.meta.env.VITE_NODE_ENV === "production" ? project?.project_cover_image: `${import.meta.env.VITE_URL_BACKEND}/${project?.project_cover_image}`}
                         status={project.project_status}
                         isFocus={activeCard === index}
                         onFocus={() => { setActiveCard(activeCard === index ? null : index) }}

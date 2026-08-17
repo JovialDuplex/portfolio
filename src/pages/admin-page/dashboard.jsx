@@ -104,7 +104,7 @@ export default function AdminDashboardPage() {
                         </p>
                     </div>
                     <div className="h-16 w-16 sm:h-20 sm:w-20 overflow-hidden rounded-full border-2 border-(--text-primary) shrink-0">
-                        <img src={`${import.meta.env.VITE_URL_BACKEND}/${user.user_picture}`} alt={"profile-picture"} className="h-full w-full object-cover" />
+                        <img src={import.meta.env.VITE_NODE_ENV === "production" ? user.user_picture : `${import.meta.env.VITE_URL_BACKEND}/${user?.user_picture}`} alt={"profile-picture"} className="h-full w-full object-cover" />
                     </div>
                 </header>
 

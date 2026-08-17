@@ -712,7 +712,8 @@ export default function AdminSettingsPage() {
                                         src={
                                             previewUrl ??
                                             (user?.user_picture
-                                                ? `${import.meta.env.VITE_URL_BACKEND}/${user.user_picture}`
+                                                ? import.meta.env.VITE_NODE_ENV === "production" ? user?.user_picture: `${import.meta.env.VITE_URL_BACKEND}/${user?.user_picture}`
+                        
                                                 : undefined)
                                         }
                                         className={"object-top object-contain border-(--text-secondary) border-2"}

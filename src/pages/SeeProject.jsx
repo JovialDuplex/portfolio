@@ -53,7 +53,8 @@ const SeeProject = function(){
             <div className="project-infos lg:border-r-2 border-r-(--border-card) pr-0 lg:pr-6 flex-1 basis-0 overflow-hidden flex flex-col">
                 <div className="flex-1 basis-0 overflow-y-auto min-h-0 pr-2">
                     <div className="header flex flex-col gap-5 justify-start">
-                        <img src={`${import.meta.env.VITE_URL_BACKEND}/${project.project_cover_image}`} alt={"cover_image"} className="w-full max-w-lg h-auto rounded-lg shadow-md"/>
+                        <img src={import.meta.env.VITE_NODE_ENV === "production" ? project?.project_cover_image: `${import.meta.env.VITE_URL_BACKEND}/${project?.project_cover_image}`}
+                         alt={"cover_image"} className="w-full max-w-lg h-auto rounded-lg shadow-md"/>
                         <div className="project-title flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                             <span className="text-2xl font-bold">{project.project_title}</span>
                             <div className="flex gap-3 items-center"> 
@@ -88,8 +89,8 @@ const SeeProject = function(){
                             title={project.project_title}
                             desc={project.project_desc}
                             status={project.project_status}
-                            image={import.meta.env.VITE_URL_BACKEND + "/" + project.project_cover_image}
-                            />
+                            image={import.meta.env.VITE_NODE_ENV === "production" ? project?.project_cover_image: `${import.meta.env.VITE_URL_BACKEND}/${project?.project_cover_image}`}
+                        />
                     ))}
                 </div>
             </div>

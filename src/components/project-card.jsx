@@ -11,7 +11,7 @@ const ProjectCard = function ({ id, title, desc, image, status, isFocus, onFocus
     return (
         <div onClick={onFocus} className="project-card mx-auto sm:mx-0 cursor-pointer rounded-[16px] text-(--text-primary) border bg-(--bg-card) p-3 border-(--border-card) max-h-80 max-w-90">
             <div className="card-image max-h-3/5 overflow-hidden w-full h-full ">
-                <img src={image} alt={"card-image"} className="object-fill rounded-lg w-full h-full" />
+                <img src={image} alt={"card-image"} className="object-contain rounded-lg w-full h-full" />
             </div>
             <div className="card-header flex flex-col gap-2 mt-3">
                 <div className="flex justify-between">

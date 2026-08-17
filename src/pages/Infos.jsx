@@ -17,7 +17,7 @@ export default function InfosPage() {
         <div className="infos-page text-(--text-primary) py-4 flex flex-col items-center gap-8 max-w-4xl mx-auto">
             <header className="flex flex-col sm:flex-row items-center gap-6 w-full p-6 bg-(--bg-card) border border-(--border-card) rounded-2xl shadow-sm">
                 <img
-                    src={user?.user_picture ? `${import.meta.env.VITE_URL_BACKEND}/${user.user_picture}` : "/logo.png"}
+                    src={import.meta.env.VITE_NODE_ENV === "production" ? user.user_picture : `${import.meta.env.VITE_URL_BACKEND}/${user?.user_picture}`}
                     alt="profile"
                     className="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-(--text-accent) shadow-md"
                 />

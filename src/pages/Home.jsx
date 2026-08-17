@@ -15,7 +15,7 @@ export default function HomePage() {
   const [services, setServices] = useState([]);
 
   const { user } = useUserStore();
-  
+  console.log(user);
   const navigate = useNavigate();
 
   useEffect(()=>{
@@ -35,7 +35,7 @@ export default function HomePage() {
       <Hero
         name={user?.user_name ?? "jovial"}
         secondName={user?.user_secondName ?? ""}
-        profilePicture={user?.user_picture ? `${import.meta.env.VITE_URL_BACKEND}/${user.user_picture}` : ""}
+        profilePicture={import.meta.env.VITE_NODE_ENV === "production" ? user.user_picture : `${import.meta.env.VITE_URL_BACKEND}/${user?.user_picture}`}
         description={user?.user_desc ?? ""}
       />
 
@@ -76,7 +76,7 @@ export default function HomePage() {
                 title={project.project_title}
                 desc={project.project_desc}
                 status={project.project_status}
-                image= {import.meta.env.VITE_URL_BACKEND + "/" + project.project_cover_image}
+                image={import.meta.env.VITE_NODE_ENV === "production" ? project?.project_cover_image: `${import.meta.env.VITE_URL_BACKEND}/${project?.project_cover_image}`}
                 isFocus = {activeCard === index}
                 onFocus = {()=> setActiveCard(activeCard === index ? null : index)}
             />
