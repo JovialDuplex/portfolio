@@ -23,33 +23,33 @@
     <link rel="icon" type="image/png" href="/logo.png" />
     <link rel="apple-touch-icon" href="/logo.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <link rel="canonical" href="https://jovial-portfolio.netlify.app/" />
+    <link rel="canonical" href="%VITE_URL_FRONTEND%/" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://jovial-portfolio.netlify.app/" />
+    <meta property="og:url" content="%VITE_URL_FRONTEND%/" />
     <meta property="og:title" content="Jovial Duplex — Full-Stack Web Developer Portfolio" />
     <meta
       property="og:description"
       content="Portfolio of Jovial Duplex, a full-stack web developer based in Douala, Cameroon. Explore my projects, services and skills, and get in touch to bring your ideas to life."
     />
-    <meta property="og:image" content="https://jovial-portfolio.netlify.app/logo.png" />
+    <meta property="og:image" content="%VITE_URL_FRONTEND%/logo.png" />
     <meta property="og:site_name" content="Jovial Duplex" />
     <meta property="og:locale" content="en_US" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://jovial-portfolio.netlify.app/" />
+    <meta name="twitter:url" content="%VITE_URL_FRONTEND%/" />
     <meta name="twitter:title" content="Jovial Duplex — Full-Stack Web Developer Portfolio" />
     <meta
       name="twitter:description"
       content="Portfolio of Jovial Duplex, a full-stack web developer based in Douala, Cameroon. Explore my projects, services and skills, and get in touch to bring your ideas to life."
     />
-    <meta name="twitter:image" content="https://jovial-portfolio.netlify.app/logo.png" />
+    <meta name="twitter:image" content="%VITE_URL_FRONTEND%/logo.png" />
 
     <!-- Preconnect to the API backend -->
-    <link rel="dns-prefetch" href="https://portfolio-api-tw0l.onrender.com" />
-    <link rel="preconnect" href="https://portfolio-api-tw0l.onrender.com" crossorigin />
+    <link rel="dns-prefetch" href="%VITE_URL_BACKEND%" />
+    <link rel="preconnect" href="%VITE_URL_BACKEND%" crossorigin />
 
     <!-- Structured data for SEO -->
     <script type="application/ld+json">
@@ -58,19 +58,19 @@
         "@graph": [
           {
             "@type": "WebSite",
-            "@id": "https://jovial-portfolio.netlify.app/#website",
-            "url": "https://jovial-portfolio.netlify.app/",
+            "@id": "%VITE_URL_FRONTEND%/#website",
+            "url": "%VITE_URL_FRONTEND%/",
             "name": "Jovial Duplex",
             "inLanguage": "en",
-            "publisher": { "@id": "https://jovial-portfolio.netlify.app/#person" }
+            "publisher": { "@id": "%VITE_URL_FRONTEND%/#person" }
           },
           {
             "@type": "Person",
-            "@id": "https://jovial-portfolio.netlify.app/#person",
-            "url": "https://jovial-portfolio.netlify.app/",
+            "@id": "%VITE_URL_FRONTEND%/#person",
+            "url": "%VITE_URL_FRONTEND%/",
             "name": "Jovial Duplex",
             "jobTitle": "Full-Stack Web Developer",
-            "image": "https://jovial-portfolio.netlify.app/logo.png",
+            "image": "%VITE_URL_FRONTEND%/logo.png",
             "description": "Full-stack web developer based in Douala, Cameroon, building sleek and modern web applications.",
             "address": {
               "@type": "PostalAddress",
@@ -81,11 +81,11 @@
           },
           {
             "@type": "ProfessionalService",
-            "@id": "https://jovial-portfolio.netlify.app/#service",
-            "url": "https://jovial-portfolio.netlify.app/services",
+            "@id": "%VITE_URL_FRONTEND%/#service",
+            "url": "%VITE_URL_FRONTEND%/services",
             "name": "Jovial Duplex Services",
             "description": "Web development services: custom websites, web applications and more.",
-            "provider": { "@id": "https://jovial-portfolio.netlify.app/#person" }
+            "provider": { "@id": "%VITE_URL_FRONTEND%/#person" }
           }
         ]
       }

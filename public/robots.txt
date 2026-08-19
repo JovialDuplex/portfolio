@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 
-Sitemap: https://jovial-portfolio.netlify.app/sitemap.xml
+Sitemap: https://jovial-portfolio.vercel.app/sitemap.xml

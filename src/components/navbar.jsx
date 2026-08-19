@@ -51,8 +51,8 @@ export default function NavBar(){
                     <Button onClick={toggleTheme} variant="outline" size="icon-lg" className={"rounded-4xl bg-(--bg-button) border-none text-(--text-accent) cursor-pointer"}> {theme === "light" ? <FaSun /> : <FaMoon/> } </Button>
                     
                     {/* download resume */}
-                    <Button className={"flex items-center gap-1.5 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer font-semibold text-sm py-4"} size={"lg"} style={{background: "linear-gradient(135deg, var(--text-accent), #1d4ed8)"}}><FaDownload/> Download Resume </Button>
-                    
+                    <Button className={"md:flex items-center gap-1.5 hidden transition-all duration-200 hover:-translate-y-0.5 cursor-pointer font-semibold text-sm py-4"} size={"lg"} style={{background: "linear-gradient(135deg, var(--text-accent), #1d4ed8)"}}><FaDownload/> Download Resume </Button>
+
                     {/* hamburger button for small screens */}
                     <Button onClick={()=> setMenuOpen((prev)=> !prev)} className={"lg:hidden bg-transparent hover:bg-transparent text-(--text-primary) cursor-pointer"} size={"icon-lg"}> {menuOpen ? <FaTimes /> :<FaBars />} </Button>
                 </div>
@@ -66,6 +66,10 @@ export default function NavBar(){
                             <NavLink className={({isActive}) => `block w-full py-2 transition-colors hover:text-(--text-accent) duration-200 cursor-pointer ${isActive ? 'font-bold text-(--text-accent)' : 'font-semibold'}`} to={value.href}> {value.label} </NavLink>
                         </li>
                     ))}
+
+                    <li>
+                        <Button className={"flex items-center gap-1.5 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer font-semibold text-sm py-4"} size={"lg"} style={{background: "linear-gradient(135deg, var(--text-accent), #1d4ed8)"}}><FaDownload/> Download Resume </Button>
+                    </li>
                 </ul>
             )}
         </>
